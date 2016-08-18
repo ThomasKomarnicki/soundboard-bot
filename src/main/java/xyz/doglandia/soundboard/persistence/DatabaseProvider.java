@@ -114,7 +114,7 @@ public class DatabaseProvider implements DataProvider {
 
             st = connection.createStatement();
             ResultSet resultSet = st.executeQuery(queryBuilder.getSoundboard(guildOptions, soundboardName));
-            SoundBoard soundBoard = queryResultParser.createSoundBoard(resultSet);
+            SoundBoard soundBoard = queryResultParser.createSoundBoard(guildOptions, resultSet);
             return soundBoard;
 
         } catch (SQLException e) {

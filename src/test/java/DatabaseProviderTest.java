@@ -75,9 +75,7 @@ public class DatabaseProviderTest {
     public void testCreateDeleteSoundboard(){
         GuildOptions guildOptions = databaseProvider.getGuildOptionsByGuildId("test_guild_id_2");
 
-        SoundBoard soundBoard = new SoundBoard();
-        soundBoard.setName("TestSoundboard1");
-        databaseProvider.createSoundboard(guildOptions, soundBoard);
+        SoundBoard soundBoard = databaseProvider.createSoundboard(guildOptions, "TestSoundboard1");
 
         guildOptions = databaseProvider.getGuildOptionsByGuildId(guildOptions.getGuildId());
 
