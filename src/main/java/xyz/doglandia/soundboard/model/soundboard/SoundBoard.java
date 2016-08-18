@@ -1,5 +1,7 @@
 package xyz.doglandia.soundboard.model.soundboard;
 
+import xyz.doglandia.soundboard.model.guild.GuildOptions;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,13 +14,15 @@ public class SoundBoard {
 
     private String name;
 
+    private GuildOptions guildOptions;
 
     public SoundBoard(){
         clips = new HashMap<>();
     }
 
-    public SoundBoard(int id){
+    public SoundBoard(GuildOptions guildOptions, int id){
         this();
+        this.guildOptions = guildOptions;
         this.id = id;
     }
 

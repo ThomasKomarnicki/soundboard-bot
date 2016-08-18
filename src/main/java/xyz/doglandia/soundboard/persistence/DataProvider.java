@@ -4,6 +4,7 @@ import xyz.doglandia.soundboard.model.guild.GuildOptions;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public interface DataProvider {
 
     void createSoundboard(GuildOptions guildOptions, SoundBoard soundBoard);
 
-    void addSoundClip(SoundBoard soundBoard, SoundClip soundClip);
+    void addSoundClip(SoundBoard soundBoard, String name, File file);
 
     void deleteSoundboard(SoundBoard soundBoard);
 

@@ -7,6 +7,7 @@ import xyz.doglandia.soundboard.persistence.database.QueryBuilder;
 import xyz.doglandia.soundboard.persistence.database.QueryResultParser;
 import xyz.doglandia.soundboard.util.Sensitive;
 
+import java.io.File;
 import java.sql.*;
 
 import java.util.ArrayList;
@@ -104,7 +105,6 @@ public class DatabaseProvider implements DataProvider {
 
     @Override
     public void createSoundboard(GuildOptions guildOptions, SoundBoard soundBoard) {
-        // todo create folder in S3
         try {
             Statement st = connection.createStatement();
             st.execute(queryBuilder.addSoundboard(guildOptions, soundBoard));
@@ -115,10 +115,21 @@ public class DatabaseProvider implements DataProvider {
     }
 
     @Override
-    public void addSoundClip(SoundBoard soundBoard, SoundClip soundClip) {
+    public void addSoundClip(SoundBoard soundBoard, String name, File file) {
+        String url = filesManager.uploadFile(createFileKey(soundBoard, name), file);
+
         try {
             Statement st = connection.createStatement();
-            st.execute(queryBuilder.addSoundClip(soundBoard, soundClip));
+            boolean result = st.execute(queryBuilder.addSoundClip(soundBoard, name, url));
+
+            // query recently added sound clip and add to soundboard
+            if(result){
+                st = connection.createStatement();
+                ResultSet soundClipResults = st.executeQuery(queryBuilder.getSoundClip(soundBoard, name));
+                SoundClip soundClip = queryResultParser.createSoundClip(soundClipResults);
+                soundBoard.addClip(soundClip);
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -136,7 +147,7 @@ public class DatabaseProvider implements DataProvider {
 
     @Override
     public void deleteClip(SoundClip soundClip) {
-        // todo delete folder on s3
+        // todo delete file on s3
         try {
             Statement st = connection.createStatement();
             st.execute(queryBuilder.deleteSoundClip(soundClip));
@@ -145,5 +156,9 @@ public class DatabaseProvider implements DataProvider {
         }
     }
 
+
+    private String createFileKey(SoundBoard soundBoard, String name){
+        // todo
+    }
 
 }

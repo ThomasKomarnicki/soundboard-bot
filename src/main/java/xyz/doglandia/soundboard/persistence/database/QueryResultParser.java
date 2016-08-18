@@ -50,13 +50,13 @@ public class QueryResultParser {
             String soundboardName = resultSet.getString("soundboard_name");
 
             if(!guildOptions.getSoundBoards().containsKey(soundboardName)) {
-                SoundBoard soundBoard = new SoundBoard(resultSet.getInt("soundboard_id"));
+                SoundBoard soundBoard = new SoundBoard(guildOptions, resultSet.getInt("soundboard_id"));
                 soundBoard.setName(soundboardName);
                 guildOptions.getSoundBoards().put(soundboardName, soundBoard);
             }
 
             SoundClip soundClip = new SoundClip(resultSet.getInt("sound_clip_id"), resultSet.getString("sound_clip_name") , resultSet.getString("clip_url"));
-            guildOptions.getSoundBoards().get(soundboardName).getClips().put(resultSet.getString("sound_clip_name"), soundClip);
+            guildOptions.getSoundBoards().get(soundboardName).addClip(soundClip);
         }
         while (resultSet.next());
 
@@ -67,5 +67,8 @@ public class QueryResultParser {
     }
 
 
+    public SoundClip createSoundClip(ResultSet soundClipResults) {
 
+
+    }
 }
