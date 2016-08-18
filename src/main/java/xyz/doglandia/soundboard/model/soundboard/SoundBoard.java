@@ -48,11 +48,19 @@ public class SoundBoard {
         return name;
     }
 
+    public String getNameAsKey(){
+        return name.toLowerCase();
+    }
+
     public Map<String, SoundClip> getClips() {
         return clips;
     }
 
     public int getId() {
         return id;
+    }
+
+    public GuildOptions getGuildOptions() {
+        return guildOptions;
     }
 }

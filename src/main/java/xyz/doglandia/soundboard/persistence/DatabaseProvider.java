@@ -5,6 +5,7 @@ import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 import xyz.doglandia.soundboard.persistence.database.QueryBuilder;
 import xyz.doglandia.soundboard.persistence.database.QueryResultParser;
+import xyz.doglandia.soundboard.util.Constants;
 import xyz.doglandia.soundboard.util.Sensitive;
 
 import java.io.File;
@@ -23,6 +24,8 @@ public class DatabaseProvider implements DataProvider {
     private static final String DB_NAME = "soundboardapp_1";
 
     private static final String GUILD_ID = "guild_id";
+
+
 
 
     private Connection connection;
@@ -104,18 +107,25 @@ public class DatabaseProvider implements DataProvider {
     }
 
     @Override
-    public void createSoundboard(GuildOptions guildOptions, SoundBoard soundBoard) {
+    public SoundBoard createSoundboard(GuildOptions guildOptions, String soundboardName) {
         try {
             Statement st = connection.createStatement();
-            st.execute(queryBuilder.addSoundboard(guildOptions, soundBoard));
+            st.execute(queryBuilder.addSoundboard(guildOptions, soundboardName));
+
+            st = connection.createStatement();
+            ResultSet resultSet = st.executeQuery(queryBuilder.getSoundboard(guildOptions, soundboardName));
+            SoundBoard soundBoard = queryResultParser.createSoundBoard(resultSet);
+            return soundBoard;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+        return null;
     }
 
     @Override
-    public void addSoundClip(SoundBoard soundBoard, String name, File file) {
+    public SoundClip createSoundClip(SoundBoard soundBoard, String name, File file) {
         String url = filesManager.uploadFile(createFileKey(soundBoard, name), file);
 
         try {
@@ -127,12 +137,13 @@ public class DatabaseProvider implements DataProvider {
                 st = connection.createStatement();
                 ResultSet soundClipResults = st.executeQuery(queryBuilder.getSoundClip(soundBoard, name));
                 SoundClip soundClip = queryResultParser.createSoundClip(soundClipResults);
-                soundBoard.addClip(soundClip);
+                return soundClip;
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     @Override
@@ -158,7 +169,7 @@ public class DatabaseProvider implements DataProvider {
 
 
     private String createFileKey(SoundBoard soundBoard, String name){
-        // todo
+        return Constants.ENVIRONMENT_NAME +"/"+soundBoard.getGuildOptions().getGuildId()+"/"+soundBoard.getNameAsKey()+"/"+name;
     }
 
 }

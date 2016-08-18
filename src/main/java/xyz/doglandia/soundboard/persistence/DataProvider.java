@@ -18,9 +18,9 @@ public interface DataProvider {
 
     void updateGuildOptions(GuildOptions guildOptions);
 
-    void createSoundboard(GuildOptions guildOptions, SoundBoard soundBoard);
+    SoundBoard createSoundboard(GuildOptions guildOptions, String soundboardName);
 
-    void addSoundClip(SoundBoard soundBoard, String name, File file);
+    SoundClip createSoundClip(SoundBoard soundBoard, String name, File file);
 
     void deleteSoundboard(SoundBoard soundBoard);
 

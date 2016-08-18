@@ -67,8 +67,15 @@ public class QueryResultParser {
     }
 
 
-    public SoundClip createSoundClip(ResultSet soundClipResults) {
+    public SoundClip createSoundClip(ResultSet soundClipResults) throws SQLException {
+        SoundClip soundClip = new SoundClip(soundClipResults.getInt("_id"), soundClipResults.getString("name"), soundClipResults.getString("clip_url"));
+        return soundClip;
+    }
 
+    public SoundBoard createSoundBoard(GuildOptions guildOptions, ResultSet resultSet) throws SQLException {
+        SoundBoard soundBoard = new SoundBoard(guildOptions, resultSet.getInt("_id"));
+        soundBoard.setName(resultSet.getString("name"));
 
+        return soundBoard;
     }
 }

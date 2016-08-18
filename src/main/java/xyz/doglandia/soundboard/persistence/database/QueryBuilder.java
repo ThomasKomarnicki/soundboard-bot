@@ -72,8 +72,8 @@ public class QueryBuilder {
         return "SELECT * FROM "+SOUND_CLIPS_TABLE+" WHERE soundboard_id = "+soundBoardId + ";";
     }
 
-    public String addSoundboard(GuildOptions guildOptions, SoundBoard soundBoard) {
-        return "INSERT INTO " + SOUNDBOARDS_TABLE + " (guild_opts_id, name) VALUES ("+guildOptions.getId()+", '"+soundBoard.getName()+"');";
+    public String addSoundboard(GuildOptions guildOptions, String soundboardName) {
+        return "INSERT INTO " + SOUNDBOARDS_TABLE + " (guild_opts_id, name) VALUES ("+guildOptions.getId()+", '"+soundboardName+"');";
     }
 
     public String addSoundClip(SoundBoard soundBoard, String name, String url) {
@@ -90,5 +90,9 @@ public class QueryBuilder {
 
     public String getSoundClip(SoundBoard soundBoard, String name) {
         return "SELECT * FROM "+SOUND_CLIPS_TABLE+" WHERE soundboard_id = "+soundBoard.getId() +" AND name = '"+name+"';";
+    }
+
+    public String getSoundboard(GuildOptions guildOptions, String name) {
+        return "SELECT * FROM "+SOUNDBOARDS_TABLE+" WHERE guild_opts_id = "+guildOptions.getId() +" AND name = '"+name+"';";
     }
 }
