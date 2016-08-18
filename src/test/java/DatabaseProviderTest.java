@@ -3,6 +3,7 @@ import xyz.doglandia.soundboard.model.guild.GuildOptions;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 import xyz.doglandia.soundboard.persistence.DatabaseProvider;
+import xyz.doglandia.soundboard.persistence.S3FileManager;
 
 import static org.junit.Assert.*;
 
@@ -17,7 +18,7 @@ public class DatabaseProviderTest {
     DatabaseProvider databaseProvider;
 
     public DatabaseProviderTest(){
-        databaseProvider = new DatabaseProvider();
+        databaseProvider = new DatabaseProvider(new S3FileManager());
 
     }
 

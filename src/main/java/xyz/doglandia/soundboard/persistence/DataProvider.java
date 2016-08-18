@@ -13,8 +13,6 @@ public interface DataProvider {
 
     GuildOptions getGuildOptionsByGuildId(String guildId);
 
-    List<GuildOptions> getAllGuildOptions();
-
     void addNewGuildOptions(GuildOptions guildOptions);
 
     void updateGuildOptions(GuildOptions guildOptions);

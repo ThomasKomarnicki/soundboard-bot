@@ -4,6 +4,7 @@ import xyz.doglandia.soundboard.model.guild.GuildOptions;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 import xyz.doglandia.soundboard.persistence.database.QueryBuilder;
+import xyz.doglandia.soundboard.persistence.database.QueryResultParser;
 import xyz.doglandia.soundboard.util.Sensitive;
 
 import java.sql.*;
@@ -21,7 +22,7 @@ public class DatabaseProvider implements DataProvider {
     private static final String DB_NAME = "soundboardapp_1";
 
     private static final String GUILD_ID = "guild_id";
-    private static final String PRIVILEGED_ROLES = "privileged_roles";
+
 
     private Connection connection;
 
@@ -30,9 +31,13 @@ public class DatabaseProvider implements DataProvider {
 
     private FilesManager filesManager;
 
+    private QueryResultParser queryResultParser;
+
     public DatabaseProvider(FilesManager filesManager){
         this.filesManager = filesManager;
         databaseName = DB_NAME;
+
+        queryResultParser = new QueryResultParser();
 
         queryBuilder = new QueryBuilder(databaseName);
         try {
@@ -62,7 +67,7 @@ public class DatabaseProvider implements DataProvider {
             ResultSet resultSet = st.executeQuery(query);
 
             if(resultSet.next()){
-                return createGuildOptionsFromResultSet(resultSet);
+                return queryResultParser.createGuildOptionsFromJoinedResults(resultSet);
             }
 
         } catch (SQLException e) {
@@ -72,27 +77,7 @@ public class DatabaseProvider implements DataProvider {
         return null;
     }
 
-    @Override
-    public List<GuildOptions> getAllGuildOptions() {
 
-        try {
-            Statement st = connection.createStatement();
-            String query = queryBuilder.getAllGuildOptions();
-            ResultSet resultSet = st.executeQuery(query);
-
-            List<GuildOptions> list = new ArrayList<>();
-            while(resultSet.next()){
-                list.add(createGuildOptionsFromResultSet(resultSet));
-            }
-
-            return list;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 
     @Override
     public void addNewGuildOptions(GuildOptions guildOptions) {
@@ -160,54 +145,5 @@ public class DatabaseProvider implements DataProvider {
         }
     }
 
-    private  GuildOptions createGuildOptionsFromResultSet(ResultSet resultSet) throws SQLException {
-        GuildOptions guildOptions = new GuildOptions(resultSet.getInt("_id"));
-        guildOptions.setGuildId(resultSet.getString(GUILD_ID).trim());
 
-        if(resultSet.getArray(PRIVILEGED_ROLES) != null) {
-            String[] privilegedRoles = (String[]) resultSet.getArray(PRIVILEGED_ROLES).getArray();
-
-            guildOptions.setRollsThatCanAddClips(Arrays.asList(privilegedRoles));
-        }
-
-        Statement st = connection.createStatement();
-        String query = queryBuilder.getSoundboardsForGuild(guildOptions.getId());
-        ResultSet soundboardsResultSet = st.executeQuery(query);
-
-        while (soundboardsResultSet.next()){
-            SoundBoard soundBoard = createSoundboardFromResultSet(soundboardsResultSet);
-            if(soundBoard != null){
-                guildOptions.getSoundBoards().put(soundBoard.getName(), soundBoard);
-            }
-        }
-
-
-
-        return guildOptions;
-    }
-
-    private SoundBoard createSoundboardFromResultSet(ResultSet resultSet) throws SQLException {
-        SoundBoard soundBoard = new SoundBoard(resultSet.getInt("_id"));
-        soundBoard.setName(resultSet.getString("name"));
-
-        Statement st = connection.createStatement();
-        String query = queryBuilder.getClipsForSoundboard(soundBoard.getId());
-        ResultSet clipsResultSet = st.executeQuery(query);
-
-        while(clipsResultSet.next()){
-            SoundClip soundClip = createClipFromResultSet(clipsResultSet);
-            soundBoard.getClips().put(soundClip.getName(), soundClip);
-        }
-
-        return soundBoard;
-    }
-
-    private SoundClip createClipFromResultSet(ResultSet resultSet) throws SQLException {
-        int id = resultSet.getInt("_id");
-        String name = resultSet.getString("name");
-        String url = resultSet.getString("clip_url");
-        SoundClip soundClip = new SoundClip(id,name,url);
-
-        return soundClip;
-    }
 }
