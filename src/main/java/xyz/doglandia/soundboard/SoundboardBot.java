@@ -33,7 +33,7 @@ public class SoundboardBot {
             e.printStackTrace();
         }
 
-        SoundboardDataCreator soundboardDataCreator = new SoundboardFilesDataCreator(new File("soundboards/"));
+//        SoundboardDataCreator soundboardDataCreator = new SoundboardFilesDataCreator(new File("soundboards/"));
         SoundsManager soundsManager = new SoundboardsController();
 
         DiscordEventListener eventListener = new DiscordEventListener(new MessageHandlerImpl(new DiscordAudioDispatcher(), new DiscordTextDispatcher(), soundsManager));

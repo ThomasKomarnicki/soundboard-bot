@@ -5,7 +5,7 @@ package xyz.doglandia.soundboard.util;
  */
 public class Constants {
 
-    public static final String STAGING_ENVIRONMENT = "staging"; // todo
+    public static String STAGING_ENVIRONMENT = "staging"; // todo
 
-    public static final String ENVIRONMENT_NAME = STAGING_ENVIRONMENT;
+    public static String ENVIRONMENT_NAME = STAGING_ENVIRONMENT;
 }
