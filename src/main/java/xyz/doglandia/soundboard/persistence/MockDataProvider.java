@@ -4,6 +4,7 @@ import xyz.doglandia.soundboard.model.guild.GuildOptions;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,14 +47,15 @@ public class MockDataProvider implements DataProvider {
     }
 
     @Override
-    public void createSoundboard(GuildOptions guildOptions, SoundBoard soundBoard) {
-
+    public SoundBoard createSoundboard(GuildOptions guildOptions, String soundboardName) {
+        return null;
     }
 
     @Override
-    public void addSoundClip(SoundBoard soundBoard, SoundClip soundClip) {
-
+    public SoundClip createSoundClip(SoundBoard soundBoard, String name, File file) {
+        return null;
     }
+
 
     @Override
     public void deleteSoundboard(SoundBoard soundBoard) {

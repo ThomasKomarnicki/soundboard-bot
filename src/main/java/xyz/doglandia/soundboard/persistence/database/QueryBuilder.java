@@ -53,8 +53,8 @@ public class QueryBuilder {
         "soundboards.name as soundboard_name, sound_clips.clip_url, sound_clips._id as sound_clip_id, " +
         "sound_clips.name as sound_clip_name " +
                 "FROM " +
-        "guild_opts.guild_opts INNER JOIN guild_opts.soundboards ON guild_opts._id = soundboards.guild_opts_id " +
-        "INNER JOIN guild_opts.sound_clips ON sound_clips.soundboard_id = soundboards._id " +
+        "guild_opts.guild_opts LEFT JOIN guild_opts.soundboards ON guild_opts._id = soundboards.guild_opts_id " +
+        "LEFT JOIN guild_opts.sound_clips ON sound_clips.soundboard_id = soundboards._id " +
                 "WHERE " +
         "guild_opts.guild_id = '" + guildId +"';";
     }

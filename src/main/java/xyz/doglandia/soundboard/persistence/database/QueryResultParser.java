@@ -32,6 +32,9 @@ public class QueryResultParser {
 
         GuildOptions guildOptions = null;
 
+        if(resultSet.isBeforeFirst()){
+            resultSet.next();
+        }
         do{
 
             if(guildOptions == null){
@@ -46,33 +49,35 @@ public class QueryResultParser {
 
             }
 
-
             String soundboardName = resultSet.getString("soundboard_name");
 
-            if(!guildOptions.getSoundBoards().containsKey(soundboardName)) {
+
+            if(soundboardName != null && !guildOptions.getSoundBoards().containsKey(soundboardName)) {
                 SoundBoard soundBoard = new SoundBoard(guildOptions, resultSet.getInt("soundboard_id"));
                 soundBoard.setName(soundboardName);
                 guildOptions.getSoundBoards().put(soundboardName, soundBoard);
             }
 
-            SoundClip soundClip = new SoundClip(resultSet.getInt("sound_clip_id"), resultSet.getString("sound_clip_name") , resultSet.getString("clip_url"));
-            guildOptions.getSoundBoards().get(soundboardName).addClip(soundClip);
+            if(resultSet.getString("sound_clip_name") != null) {
+                SoundClip soundClip = new SoundClip(resultSet.getInt("sound_clip_id"), resultSet.getString("sound_clip_name"), resultSet.getString("clip_url"));
+                guildOptions.getSoundBoards().get(soundboardName).addClip(soundClip);
+            }
+
         }
         while (resultSet.next());
-
-
-
 
         return guildOptions;
     }
 
 
     public SoundClip createSoundClip(ResultSet soundClipResults) throws SQLException {
+        soundClipResults.next();
         SoundClip soundClip = new SoundClip(soundClipResults.getInt("_id"), soundClipResults.getString("name"), soundClipResults.getString("clip_url"));
         return soundClip;
     }
 
     public SoundBoard createSoundBoard(GuildOptions guildOptions, ResultSet resultSet) throws SQLException {
+        resultSet.next();
         SoundBoard soundBoard = new SoundBoard(guildOptions, resultSet.getInt("_id"));
         soundBoard.setName(resultSet.getString("name"));
 
