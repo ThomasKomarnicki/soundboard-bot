@@ -52,15 +52,15 @@ public class QueryResultParser {
             String soundboardName = resultSet.getString("soundboard_name");
 
 
-            if(soundboardName != null && !guildOptions.getSoundBoards().containsKey(soundboardName)) {
+            if(soundboardName != null && !guildOptions.hasSoundboard(soundboardName)) {
                 SoundBoard soundBoard = new SoundBoard(guildOptions, resultSet.getInt("soundboard_id"));
                 soundBoard.setName(soundboardName);
-                guildOptions.getSoundBoards().put(soundboardName, soundBoard);
+                guildOptions.putSoundboard(soundBoard);
             }
 
             if(resultSet.getString("sound_clip_name") != null) {
                 SoundClip soundClip = new SoundClip(resultSet.getInt("sound_clip_id"), resultSet.getString("sound_clip_name"), resultSet.getString("clip_url"));
-                guildOptions.getSoundBoards().get(soundboardName).addClip(soundClip);
+                guildOptions.getSoundboard(soundboardName).addClip(soundClip);
             }
 
         }

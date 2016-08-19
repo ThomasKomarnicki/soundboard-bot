@@ -5,10 +5,7 @@ import sx.blah.discord.api.events.IListener;
 import sx.blah.discord.handle.impl.events.GuildCreateEvent;
 import sx.blah.discord.util.LogMarkers;
 import xyz.doglandia.soundboard.audio.DiscordAudioDispatcher;
-import xyz.doglandia.soundboard.audio.management.SoundboardDataCreator;
-import xyz.doglandia.soundboard.audio.management.SoundboardFilesDataCreator;
-import xyz.doglandia.soundboard.audio.management.SoundboardSoundManager;
-import xyz.doglandia.soundboard.audio.management.SoundsManager;
+import xyz.doglandia.soundboard.audio.management.*;
 import xyz.doglandia.soundboard.discord.DiscordEventListener;
 import xyz.doglandia.soundboard.message.MessageHandlerImpl;
 import sx.blah.discord.api.ClientBuilder;
@@ -37,7 +34,7 @@ public class SoundboardBot {
         }
 
         SoundboardDataCreator soundboardDataCreator = new SoundboardFilesDataCreator(new File("soundboards/"));
-        SoundsManager soundsManager = new SoundboardSoundManager(soundboardDataCreator);
+        SoundsManager soundsManager = new SoundboardsController();
 
         DiscordEventListener eventListener = new DiscordEventListener(new MessageHandlerImpl(new DiscordAudioDispatcher(), new DiscordTextDispatcher(), soundsManager));
         client.getDispatcher().registerListener(eventListener);

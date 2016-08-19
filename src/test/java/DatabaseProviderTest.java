@@ -26,9 +26,9 @@ public class DatabaseProviderTest {
     @Test
     public void testAddingGuild(){
 
-        GuildOptions guildOptions = createTestOptions();
+//        GuildOptions guildOptions = createTestOptions();
 
-        databaseProvider.addNewGuildOptions(guildOptions);
+        databaseProvider.createGuildOptions("test_guild_id_3");
 
     }
 
@@ -62,10 +62,10 @@ public class DatabaseProviderTest {
         assertTrue(guildOptions != null);
         assertEquals(guildOptions.getGuildId(), "test_guild_id_2");
 
-        assertNotNull(guildOptions.getSoundBoards());
-        assertTrue(guildOptions.getSoundBoards().size() > 0);
+//        assertNotNull(guildOptions.getSoundBoards());
+//        assertTrue(guildOptions.getSoundBoards().size() > 0);
 
-        SoundBoard pete = guildOptions.getSoundBoards().get("Pete");
+        SoundBoard pete = guildOptions.getSoundboard("Pete");
         assertNotNull(pete);
         assertTrue(pete.hasClip("apple"));
         assertTrue(pete.hasClip("value"));
@@ -80,23 +80,23 @@ public class DatabaseProviderTest {
 
         guildOptions = databaseProvider.getGuildOptionsByGuildId(guildOptions.getGuildId());
 
-        assertNotNull(guildOptions.getSoundBoards());
-        assertTrue(guildOptions.getSoundBoards().size() > 0);
-        assertTrue(guildOptions.getSoundBoards().containsKey("TestSoundboard1"));
+//        assertNotNull(guildOptions.getSoundBoards());
+//        assertTrue(guildOptions.getSoundBoards().size() > 0);
+        assertTrue(guildOptions.hasSoundboard("TestSoundboard1"));
 
-        databaseProvider.deleteSoundboard(guildOptions.getSoundBoards().get("TestSoundboard1"));
+        databaseProvider.deleteSoundboard(guildOptions.getSoundboard("TestSoundboard1"));
     }
 
     @Test
     public void testCreateDeleteSoundClip(){
         GuildOptions guildOptions = databaseProvider.getGuildOptionsByGuildId("test_guild_id_2");
 
-        SoundBoard soundBoard = guildOptions.getSoundBoards().get("Pete");
+        SoundBoard soundBoard = guildOptions.getSoundboard("Pete");
 
         databaseProvider.createSoundClip(soundBoard, "test_clip.mp3", new File("test/test_clip.mp3"));
 
         guildOptions = databaseProvider.getGuildOptionsByGuildId(guildOptions.getGuildId());
-        soundBoard = guildOptions.getSoundBoards().get("Pete");
+        soundBoard = guildOptions.getSoundboard("Pete");
 
         assertNotNull(soundBoard.getClips().get("test_clip"));
 

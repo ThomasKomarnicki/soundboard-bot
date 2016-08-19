@@ -27,6 +27,11 @@ public class MockDataProvider implements DataProvider {
         return guildOptions.get(guildId);
     }
 
+    @Override
+    public void createGuildOptions(String guildId) {
+
+    }
+
 //    @Override
 //    public List<GuildOptions> getAllGuildOptions() {
 //        List<GuildOptions> list = new ArrayList<>();
@@ -36,10 +41,6 @@ public class MockDataProvider implements DataProvider {
 //        return list;
 //    }
 
-    @Override
-    public void addNewGuildOptions(GuildOptions guildOptions) {
-        this.guildOptions.put(guildOptions.getGuildId(), guildOptions);
-    }
 
     @Override
     public void updateGuildOptions(GuildOptions guildOptions) {

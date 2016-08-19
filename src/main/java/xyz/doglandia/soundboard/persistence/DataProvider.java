@@ -14,7 +14,7 @@ public interface DataProvider {
 
     GuildOptions getGuildOptionsByGuildId(String guildId);
 
-    void addNewGuildOptions(GuildOptions guildOptions);
+    void createGuildOptions(String guildId);
 
     void updateGuildOptions(GuildOptions guildOptions);
 

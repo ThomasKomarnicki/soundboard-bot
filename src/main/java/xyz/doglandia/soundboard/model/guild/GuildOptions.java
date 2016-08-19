@@ -53,7 +53,21 @@ public class GuildOptions {
         return id;
     }
 
-    public HashMap<String, SoundBoard> getSoundBoards() {
-        return soundBoards;
+//    public HashMap<String, SoundBoard> getSoundBoards() {
+//        return soundBoards;
+//    }
+
+    public boolean hasSoundboard(String soundboardName){
+        return soundBoards.containsKey(SoundBoard.getNameAsKey(soundboardName));
     }
+
+    public SoundBoard getSoundboard(String soundboardName){
+        return soundBoards.get(SoundBoard.getNameAsKey(soundboardName));
+    }
+
+    public void putSoundboard(SoundBoard soundBoard){
+        soundBoards.put(soundBoard.getNameAsKey(), soundBoard);
+    }
+
+
 }

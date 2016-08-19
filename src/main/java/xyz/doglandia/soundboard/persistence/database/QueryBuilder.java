@@ -20,21 +20,6 @@ public class QueryBuilder {
         this.databaseName = databaseName;
     }
 
-    public String insertGuildOptions(GuildOptions guildOptions){
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("INSERT INTO guild_opts.guild_opts (guild_id, privileged_roles) VALUES (");
-        stringBuilder.append("'"+guildOptions.getGuildId()+"',");
-        if(guildOptions.getRollsThatCanAddClips() != null && guildOptions.getRollsThatCanAddClips().size() > 0){
-
-            // add roles to insert string
-
-        }
-
-        stringBuilder.append(");");
-
-        return stringBuilder.toString();
-    }
 
     public String updateGuildOptions(GuildOptions guildOptions) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -57,6 +42,10 @@ public class QueryBuilder {
         "LEFT JOIN guild_opts.sound_clips ON sound_clips.soundboard_id = soundboards._id " +
                 "WHERE " +
         "guild_opts.guild_id = '" + guildId +"';";
+    }
+
+    public String createNewGuildOptions(String guildId) {
+        return "INSERT INTO "+GUILD_OPTS_TABLE+" (guild_id) VALUES ('"+guildId+"');";
     }
 
     public String getAllGuildOptions(){
@@ -95,4 +84,5 @@ public class QueryBuilder {
     public String getSoundboard(GuildOptions guildOptions, String name) {
         return "SELECT * FROM "+SOUNDBOARDS_TABLE+" WHERE guild_opts_id = "+guildOptions.getId() +" AND name = '"+name+"';";
     }
+
 }

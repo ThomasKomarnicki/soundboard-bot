@@ -81,19 +81,19 @@ public class DatabaseProvider implements DataProvider {
         return null;
     }
 
-
-
     @Override
-    public void addNewGuildOptions(GuildOptions guildOptions) {
+    public void createGuildOptions(String guildId) {
+
         try {
             Statement st = connection.createStatement();
-            String query = queryBuilder.insertGuildOptions(guildOptions);
+            String query = queryBuilder.createNewGuildOptions(guildId);
             st.execute(query);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
+
 
     @Override
     public void updateGuildOptions(GuildOptions guildOptions) {

@@ -49,7 +49,7 @@ public class SoundBoard {
     }
 
     public String getNameAsKey(){
-        return name.toLowerCase();
+        return getNameAsKey(name);
     }
 
     public Map<String, SoundClip> getClips() {
@@ -62,5 +62,9 @@ public class SoundBoard {
 
     public GuildOptions getGuildOptions() {
         return guildOptions;
+    }
+
+    public static String getNameAsKey(String name){
+        return name.toLowerCase();
     }
 }
