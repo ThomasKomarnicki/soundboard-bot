@@ -72,17 +72,17 @@ public class MessageHandlerImpl implements MessageHandler {
 
                 String soundboardName =  params[0].substring(1,params[0].length());
                 if (params[1].equalsIgnoreCase("help")){
-                    return handleHelpRequest(soundboardName, chatChannel);
+                    return handleHelpRequest(soundboardName, message);
                 }
                 if(params[0].equalsIgnoreCase("!add")){
                     if(params[1].equalsIgnoreCase("help")){
                         return handleAddHelp(chatChannel);
                     }else {
                         if(message.getAttachments() != null && message.getAttachments().size() >= 1){
-                            return handleAddClip(params[1], params[2], message.getAttachments().get(0).getUrl(), chatChannel);
+                            return handleAddClip(params[1], params[2], message.getAttachments().get(0).getUrl(), message);
                         }
 
-                        return handleAddClip(params[1], params[2], params[3], chatChannel);
+                        return handleAddClip(params[1], params[2], params[3], message);
 
                     }
                 }
@@ -110,26 +110,29 @@ public class MessageHandlerImpl implements MessageHandler {
     private boolean handleSoundClipRequest(IMessage message, String soundboardName, String[] clipParam){
         String expandedName = Util.fromArrayWithUnderscores(clipParam,0,clipParam.length);
 
-        if(soundsManager.soundClipExists(soundboardName, expandedName)){
-            SoundClip soundClip = soundsManager.getSoundClip(soundboardName, expandedName);
+        String guildId = Util.getGuildFromUserMessage(message).getID();
+
+        if(soundsManager.soundClipExists(guildId, soundboardName, expandedName)){
+            SoundClip soundClip = soundsManager.getSoundClip(guildId, soundboardName, expandedName);
             audioDispatcher.playAudioClip(message, soundClip.getUrl());
             return true;
         }
         return false;
     }
 
-    private boolean handleHelpRequest(String soundboardName, IChannel channel){
+    private boolean handleHelpRequest(String soundboardName, IMessage message){
+        String guildId = Util.getGuildFromUserMessage(message).getID();
 
-        if(soundsManager.soundBoardExists(soundboardName)) {
+        if(soundsManager.soundBoardExists(guildId, soundboardName)) {
 
-            SoundBoard soundBoard = soundsManager.getSoundboard(soundboardName);
+            SoundBoard soundBoard = soundsManager.getSoundboard(guildId, soundboardName);
 
             StringBuilder helpBuilder = new StringBuilder();
             for (Map.Entry<String, SoundClip> entry : soundBoard.getClips().entrySet()){
                 helpBuilder.append("!"+soundboardName+" "+entry.getKey().replace("_"," ")+"\n");
             }
 
-            textDispatcher.dispatchText(helpBuilder.toString(), channel);
+            textDispatcher.dispatchText(helpBuilder.toString(), message.getChannel());
         }
 
         return false;
@@ -159,10 +162,11 @@ public class MessageHandlerImpl implements MessageHandler {
      * @param clipUrl
      * @return if the soundclip was added successfully
      */
-    private boolean handleAddClip(String soundboardName, String clipName, String clipUrl, IChannel channel){
+    private boolean handleAddClip(String soundboardName, String clipName, String clipUrl, IMessage message){
+        String guildId = Util.getGuildFromUserMessage(message).getID();
         try {
-            soundsManager.saveSoundFileToSoundboard(clipUrl, soundboardName, clipName);
-            channel.sendMessage("Clip added! *!"+soundboardName+" "+clipName+"*");
+            soundsManager.saveSoundFileToSoundboard(guildId, clipUrl, soundboardName, clipName);
+            message.getChannel().sendMessage("Clip added! *!"+soundboardName+" "+clipName+"*");
             return true;
         } catch (SoundboardExistException e) {
             e.printStackTrace();

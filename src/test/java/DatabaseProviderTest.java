@@ -7,6 +7,7 @@ import xyz.doglandia.soundboard.persistence.S3FileManager;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,21 +89,19 @@ public class DatabaseProviderTest {
 
     @Test
     public void testCreateDeleteSoundClip(){
-//        GuildOptions guildOptions = databaseProvider.getGuildOptionsByGuildId("test_guild_id_2");
-//
-//        SoundBoard soundBoard = guildOptions.getSoundBoards().get("Pete");
-//        SoundClip soundClip = new SoundClip("test_sound_clip","http://www.google.com");
-//
-//        databaseProvider.addSoundClip(soundBoard, soundClip);
-//
-//
-//        guildOptions = databaseProvider.getGuildOptionsByGuildId(guildOptions.getGuildId());
-//        soundBoard = guildOptions.getSoundBoards().get("Pete");
-//
-//        assertNotNull(soundBoard.getClips().get("test_sound_clip"));
-//
-//
-//        databaseProvider.deleteClip(soundBoard.getClips().get("test_sound_clip"));
+        GuildOptions guildOptions = databaseProvider.getGuildOptionsByGuildId("test_guild_id_2");
+
+        SoundBoard soundBoard = guildOptions.getSoundBoards().get("Pete");
+
+        databaseProvider.createSoundClip(soundBoard, "test_clip.mp3", new File("test/test_clip.mp3"));
+
+        guildOptions = databaseProvider.getGuildOptionsByGuildId(guildOptions.getGuildId());
+        soundBoard = guildOptions.getSoundBoards().get("Pete");
+
+        assertNotNull(soundBoard.getClips().get("test_clip"));
+
+
+        databaseProvider.deleteClip(soundBoard.getClips().get("test_sound_clip"));
     }
 
     private static GuildOptions createTestOptions(){

@@ -12,13 +12,13 @@ import java.io.IOException;
  */
 public interface SoundsManager {
 
-    boolean soundClipExists(String soundboardName, String clipParam);
+    boolean soundClipExists(String guildId, String soundboardName, String clipParam);
 
-    SoundClip getSoundClip(String soundboardName, String clipParam);
+    SoundClip getSoundClip(String guildId, String soundboardName, String clipParam);
 
-    boolean soundBoardExists(String soundboardName);
+    boolean soundBoardExists(String guildId, String soundboardName);
 
-    SoundBoard getSoundboard(String soundboardName);
+    SoundBoard getSoundboard(String guildId, String soundboardName);
 
-    void saveSoundFileToSoundboard(String url, String soundboardName, String clipName) throws SoundboardExistException, IOException, InvalidAudioClipException;
+    void saveSoundFileToSoundboard(String guildId, String url, String soundboardName, String clipName) throws SoundboardExistException, IOException, InvalidAudioClipException;
 }

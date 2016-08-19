@@ -167,7 +167,6 @@ public class DatabaseProvider implements DataProvider {
         }
     }
 
-
     private String createFileKey(SoundBoard soundBoard, String name){
         return Constants.ENVIRONMENT_NAME +"/"+soundBoard.getGuildOptions().getGuildId()+"/"+soundBoard.getNameAsKey()+"/"+name;
     }

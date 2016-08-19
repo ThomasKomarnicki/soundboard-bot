@@ -10,6 +10,10 @@ import sx.blah.discord.handle.obj.IUser;
 public class Util {
 
     public static IGuild getGuildFromUserMessage(IMessage message){
+        if(message.getGuild() != null){
+            return message.getGuild();
+        }
+
         String authorId = message.getAuthor().getID();
         for(IGuild guild : message.getClient().getGuilds()){
             IUser user = guild.getUserByID(authorId);

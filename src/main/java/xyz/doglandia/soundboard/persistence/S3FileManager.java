@@ -14,13 +14,16 @@ public class S3FileManager implements FilesManager {
 
     private static final String S3_BUCKET_NAME = "soundboard-app";
 
+    private AmazonS3 s3Client;
+
+    public S3FileManager() {
+        BasicAWSCredentials awsCreds = new BasicAWSCredentials(Sensitive.AWS_ACCESS_KEY_ID, Sensitive.AWS_SECRET_ACCESS_KEY);
+        s3Client = new AmazonS3Client(awsCreds);
+    }
+
 
     @Override
     public String uploadFile(String key, File downloadedSoundFile) {
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials(Sensitive.AWS_ACCESS_KEY_ID, Sensitive.AWS_SECRET_ACCESS_KEY);
-        AmazonS3 s3Client = new AmazonS3Client(awsCreds);
-
-
 
         s3Client.putObject(S3_BUCKET_NAME, key, downloadedSoundFile);
 
