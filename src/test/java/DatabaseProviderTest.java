@@ -93,7 +93,7 @@ public class DatabaseProviderTest {
 
         SoundBoard soundBoard = guildOptions.getSoundboard("Pete");
 
-        databaseProvider.createSoundClip(soundBoard, "test_clip.mp3", new File("test/test_clip.mp3"));
+        databaseProvider.createSoundClip(soundBoard, "test_clip", new File("test/test_clip.mp3"));
 
         guildOptions = databaseProvider.getGuildOptionsByGuildId(guildOptions.getGuildId());
         soundBoard = guildOptions.getSoundboard("Pete");
@@ -101,7 +101,7 @@ public class DatabaseProviderTest {
         assertNotNull(soundBoard.getClips().get("test_clip"));
 
 
-        databaseProvider.deleteClip(soundBoard.getClips().get("test_sound_clip"));
+        databaseProvider.deleteClip(soundBoard.getClips().get("test_clip"));
     }
 
     private static GuildOptions createTestOptions(){

@@ -10,8 +10,10 @@ import sx.blah.discord.handle.obj.IUser;
 public class Util {
 
     public static IGuild getGuildFromUserMessage(IMessage message){
-        if(message.getGuild() != null){
+        try{
             return message.getGuild();
+        }catch (UnsupportedOperationException e){
+            // silently fail
         }
 
         String authorId = message.getAuthor().getID();

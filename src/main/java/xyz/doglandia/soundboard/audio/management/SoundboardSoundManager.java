@@ -34,62 +34,87 @@ public class SoundboardSoundManager implements SoundsManager {
 
     }
 
+//
+//    @Override
+//    public boolean soundClipExists(String soundboardName, String clipParam) {
+//        if(soundBoardExists(soundboardName)){
+//            return soundboardMeta.getSoundBoardByName(soundboardName.toLowerCase()).hasClip(clipParam);
+//        }
+//        return false;
+//    }
+//
+//    @Override
+//    public SoundClip getSoundClip(String soundboardName, String clipParam) {
+//        if(soundBoardExists(soundboardName)){
+//            return soundboardMeta.getSoundBoardByName(soundboardName.toLowerCase()).getSoundClip(clipParam);
+//        }
+//        return null;
+//    }
+//
+//    @Override
+//    public boolean soundBoardExists(String soundboardName) {
+//        return soundboardMeta.hasSoundboard(soundboardName.toLowerCase());
+//    }
+//
+//    @Override
+//    public SoundBoard getSoundboard(String soundboardName) {
+//        return soundboardMeta.getSoundBoardByName(soundboardName);
+//    }
+//
+//    @Override
+//    public void saveSoundFileToSoundboard(String url, String soundboardName, String clipName) throws SoundboardExistException, IOException, InvalidAudioClipException{
+//
+//        if(!soundBoardExists(soundboardName)){
+//            throw new SoundboardExistException(soundboardName);
+//        }
+//
+//        if(!url.endsWith(".mp3")){
+//            throw new InvalidAudioClipException();
+//        }
+//
+//        OkHttpClient client = new OkHttpClient();
+//        Request request = new Request.Builder().url(url)
+//                .build();
+//
+//        Response response = client.newCall(request).execute();
+//
+//        InputStream inputStream = response.body().byteStream();
+//
+//        File newClip = new File("soundboards"+File.separator+soundboardName+File.separator+clipName+".mp3");
+//        OutputStream outStream = new FileOutputStream(newClip);
+//        byte[] buffer = new byte[4096];
+//        int len;
+//        while ((len = inputStream.read(buffer)) > 0) {
+//            outStream.write(buffer, 0, len);
+//        }
+//        outStream.close();
+//
+////        soundboardMeta.getSoundBoardByName(soundboardName).addClip(new SoundClip(clipName, newClip));
+//
+//    }
 
     @Override
-    public boolean soundClipExists(String soundboardName, String clipParam) {
-        if(soundBoardExists(soundboardName)){
-            return soundboardMeta.getSoundBoardByName(soundboardName.toLowerCase()).hasClip(clipParam);
-        }
+    public boolean soundClipExists(String guildId, String soundboardName, String clipParam) {
         return false;
     }
 
     @Override
-    public SoundClip getSoundClip(String soundboardName, String clipParam) {
-        if(soundBoardExists(soundboardName)){
-            return soundboardMeta.getSoundBoardByName(soundboardName.toLowerCase()).getSoundClip(clipParam);
-        }
+    public SoundClip getSoundClip(String guildId, String soundboardName, String clipParam) {
         return null;
     }
 
     @Override
-    public boolean soundBoardExists(String soundboardName) {
-        return soundboardMeta.hasSoundboard(soundboardName.toLowerCase());
+    public boolean soundBoardExists(String guildId, String soundboardName) {
+        return false;
     }
 
     @Override
-    public SoundBoard getSoundboard(String soundboardName) {
-        return soundboardMeta.getSoundBoardByName(soundboardName);
+    public SoundBoard getSoundboard(String guildId, String soundboardName) {
+        return null;
     }
 
     @Override
-    public void saveSoundFileToSoundboard(String url, String soundboardName, String clipName) throws SoundboardExistException, IOException, InvalidAudioClipException{
-
-        if(!soundBoardExists(soundboardName)){
-            throw new SoundboardExistException(soundboardName);
-        }
-
-        if(!url.endsWith(".mp3")){
-            throw new InvalidAudioClipException();
-        }
-
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(url)
-                .build();
-
-        Response response = client.newCall(request).execute();
-
-        InputStream inputStream = response.body().byteStream();
-
-        File newClip = new File("soundboards"+File.separator+soundboardName+File.separator+clipName+".mp3");
-        OutputStream outStream = new FileOutputStream(newClip);
-        byte[] buffer = new byte[4096];
-        int len;
-        while ((len = inputStream.read(buffer)) > 0) {
-            outStream.write(buffer, 0, len);
-        }
-        outStream.close();
-
-//        soundboardMeta.getSoundBoardByName(soundboardName).addClip(new SoundClip(clipName, newClip));
+    public void saveSoundFileToSoundboard(String guildId, String url, String soundboardName, String clipName) throws SoundboardExistException, IOException, InvalidAudioClipException {
 
     }
 }
