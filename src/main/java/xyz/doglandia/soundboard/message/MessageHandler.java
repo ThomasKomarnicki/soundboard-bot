@@ -1,6 +1,7 @@
 package xyz.doglandia.soundboard.message;
 
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 
 /**
@@ -10,4 +11,6 @@ public interface MessageHandler {
 
     boolean handleMessage(IMessage message, IChannel chatChannel);
     boolean handleMention(IMessage message, IChannel chatChannel);
+
+    void handleGuildCreated(IGuild guild);
 }

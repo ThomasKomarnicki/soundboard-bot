@@ -2,9 +2,6 @@ package xyz.doglandia.soundboard.audio.management;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import xyz.doglandia.soundboard.exception.InvalidAudioClipException;
 import xyz.doglandia.soundboard.exception.SoundboardExistException;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
@@ -18,7 +15,7 @@ import java.io.*;
  */
 
 @Deprecated
-public class SoundboardSoundManager implements SoundsManager {
+public class SoundboardSoundManager implements SoundboardController {
 
     private SoundboardMeta soundboardMeta;
 
@@ -115,6 +112,11 @@ public class SoundboardSoundManager implements SoundsManager {
 
     @Override
     public void saveSoundFileToSoundboard(String guildId, String url, String soundboardName, String clipName) throws SoundboardExistException, IOException, InvalidAudioClipException {
+
+    }
+
+    @Override
+    public void initGuild(String guildId) {
 
     }
 }

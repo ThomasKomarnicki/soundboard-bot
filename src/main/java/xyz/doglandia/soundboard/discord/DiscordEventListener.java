@@ -33,6 +33,9 @@ public class DiscordEventListener {
 //        } catch (MissingPermissionsException e) {
 //            e.printStackTrace();
 //        }
+
+        messageHandler.handleGuildCreated(event.getGuild());
+
     }
 
     @EventSubscriber

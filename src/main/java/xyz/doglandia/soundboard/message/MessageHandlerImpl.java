@@ -6,7 +6,7 @@ import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 import xyz.doglandia.soundboard.audio.AudioDispatcher;
-import xyz.doglandia.soundboard.audio.management.SoundsManager;
+import xyz.doglandia.soundboard.audio.management.SoundboardController;
 import xyz.doglandia.soundboard.exception.InvalidAudioClipException;
 import xyz.doglandia.soundboard.exception.SoundboardExistException;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
@@ -28,14 +28,14 @@ public class MessageHandlerImpl implements MessageHandler {
 
     private AudioDispatcher audioDispatcher;
     private TextDispatcher textDispatcher;
-    private SoundsManager soundsManager;
+    private SoundboardController soundboardController;
 
 
 
-    public MessageHandlerImpl(AudioDispatcher audioDispatcher, TextDispatcher textDispatcher, SoundsManager soundsManager){
+    public MessageHandlerImpl(AudioDispatcher audioDispatcher, TextDispatcher textDispatcher, SoundboardController soundboardController){
         this.textDispatcher = textDispatcher;
         this.audioDispatcher = audioDispatcher;
-        this.soundsManager = soundsManager;
+        this.soundboardController = soundboardController;
     }
 
     @Override
@@ -107,13 +107,18 @@ public class MessageHandlerImpl implements MessageHandler {
         return false;
     }
 
+    @Override
+    public void handleGuildCreated(IGuild guild) {
+        soundboardController.initGuild(guild.getID());
+    }
+
     private boolean handleSoundClipRequest(IMessage message, String soundboardName, String[] clipParam){
         String expandedName = Util.fromArrayWithUnderscores(clipParam,0,clipParam.length);
 
         String guildId = Util.getGuildFromUserMessage(message).getID();
 
-        if(soundsManager.soundClipExists(guildId, soundboardName, expandedName)){
-            SoundClip soundClip = soundsManager.getSoundClip(guildId, soundboardName, expandedName);
+        if(soundboardController.soundClipExists(guildId, soundboardName, expandedName)){
+            SoundClip soundClip = soundboardController.getSoundClip(guildId, soundboardName, expandedName);
             audioDispatcher.playAudioClip(message, soundClip.getUrl());
             return true;
         }
@@ -123,9 +128,9 @@ public class MessageHandlerImpl implements MessageHandler {
     private boolean handleHelpRequest(String soundboardName, IMessage message){
         String guildId = Util.getGuildFromUserMessage(message).getID();
 
-        if(soundsManager.soundBoardExists(guildId, soundboardName)) {
+        if(soundboardController.soundBoardExists(guildId, soundboardName)) {
 
-            SoundBoard soundBoard = soundsManager.getSoundboard(guildId, soundboardName);
+            SoundBoard soundBoard = soundboardController.getSoundboard(guildId, soundboardName);
 
             StringBuilder helpBuilder = new StringBuilder();
             for (Map.Entry<String, SoundClip> entry : soundBoard.getClips().entrySet()){
@@ -165,7 +170,7 @@ public class MessageHandlerImpl implements MessageHandler {
     private boolean handleAddClip(String soundboardName, String clipName, String clipUrl, IMessage message){
         String guildId = Util.getGuildFromUserMessage(message).getID();
         try {
-            soundsManager.saveSoundFileToSoundboard(guildId, clipUrl, soundboardName, clipName);
+            soundboardController.saveSoundFileToSoundboard(guildId, clipUrl, soundboardName, clipName);
             message.getChannel().sendMessage("Clip added! *!"+soundboardName+" "+clipName+"*");
             return true;
         } catch (SoundboardExistException e) {

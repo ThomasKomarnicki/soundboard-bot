@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by tdk10 on 7/16/2016.
  */
-public interface SoundsManager {
+public interface SoundboardController {
 
     boolean soundClipExists(String guildId, String soundboardName, String clipParam);
 
@@ -21,4 +21,6 @@ public interface SoundsManager {
     SoundBoard getSoundboard(String guildId, String soundboardName);
 
     void saveSoundFileToSoundboard(String guildId, String url, String soundboardName, String clipName) throws SoundboardExistException, IOException, InvalidAudioClipException;
+
+    void initGuild(String guildId);
 }

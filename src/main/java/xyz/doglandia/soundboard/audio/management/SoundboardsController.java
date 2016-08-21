@@ -18,7 +18,7 @@ import java.util.HashMap;
 /**
  * controls interaction between DataProvider and Soundboard app
  */
-public class SoundboardsController implements SoundsManager {
+public class SoundboardsController implements SoundboardController {
 
     private DataProvider dataProvider;
 
@@ -97,6 +97,12 @@ public class SoundboardsController implements SoundsManager {
         SoundClip soundClip = dataProvider.createSoundClip(soundBoard, clipName, newClip);
         soundBoard.addClip(soundClip);
 
+    }
+
+    @Override
+    public void initGuild(String guildId) {
+        GuildOptions guildOptions = getOrCreateGuildOptions(guildId);
+        guilds.put(guildId, guildOptions);
     }
 
 
