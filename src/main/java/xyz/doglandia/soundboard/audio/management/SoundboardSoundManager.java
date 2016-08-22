@@ -119,4 +119,9 @@ public class SoundboardSoundManager implements SoundboardController {
     public void initGuild(String guildId) {
 
     }
+
+    @Override
+    public void createSoundboard(String guildId, String soundboardName) {
+
+    }
 }

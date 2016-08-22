@@ -31,10 +31,10 @@ public class DatabaseProvider implements DataProvider {
     private Connection connection;
 
     private String databaseName;
-    private QueryBuilder queryBuilder;
 
     private FilesManager filesManager;
 
+    private QueryBuilder queryBuilder;
     private QueryResultParser queryResultParser;
 
     public DatabaseProvider(FilesManager filesManager){
@@ -110,10 +110,10 @@ public class DatabaseProvider implements DataProvider {
     public SoundBoard createSoundboard(GuildOptions guildOptions, String soundboardName) {
         try {
             Statement st = connection.createStatement();
-            st.execute(queryBuilder.addSoundboard(guildOptions, soundboardName));
+            st.execute(queryBuilder.addSoundboard(guildOptions, soundboardName.toLowerCase(), soundboardName));
 
             st = connection.createStatement();
-            ResultSet resultSet = st.executeQuery(queryBuilder.getSoundboard(guildOptions, soundboardName));
+            ResultSet resultSet = st.executeQuery(queryBuilder.getSoundboard(guildOptions, soundboardName.toLowerCase()));
             SoundBoard soundBoard = queryResultParser.createSoundBoard(guildOptions, resultSet);
             return soundBoard;
 

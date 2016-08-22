@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static xyz.doglandia.soundboard.message.MessageParams.Keys.*;
+
 /**
  * Created by tdk10 on 7/16/2016.
  */
@@ -40,65 +42,34 @@ public class MessageHandlerImpl implements MessageHandler {
 
     @Override
     public boolean handleMessage(IMessage message, IChannel chatChannel) {
-        String[] params = message.getContent().split(" ");
 
-//        if(params.length >= 2){
-//            if(params[0].equalsIgnoreCase("!stats")){
-//                ChannelStatistics channelStatistics = new ChannelStatistics(chatChannel);
-//                if(params[1].equalsIgnoreCase("phrase") && params.length >= 3){
-//                    CountStatistic phraseCountStatistic = channelStatistics.getStatsForPhrase(Util.stringFromArray(params,2,params.length));
-//                    textDispatcher.dispatchText(phraseCountStatistic.getDisplayOutput(), chatChannel);
-//
-//                }else if(params[1].equalsIgnoreCase("count") && params.length >= 3){
-//                    if(params[2].equalsIgnoreCase("messages")) {
-//                        CountStatistic phraseCountStatistic = channelStatistics.getStatsForMessageCount();
-//                        textDispatcher.dispatchText(phraseCountStatistic.getDisplayOutput(), chatChannel);
-//                    }else if(params[2].equalsIgnoreCase("links")){
-//                        MultiCountStatistic phraseCountStatistic = channelStatistics.getStatsForLinks();
-//                        textDispatcher.dispatchText(phraseCountStatistic.getDisplayOutput(), chatChannel);
-//                    }
-//
-//
-//                }
-//            }
-//        }
+        MessageParams messageParams = new MessageParams(message);
 
-
-
-        if(params.length >= 2){
-            if(params[0].startsWith("!") && params[0].length() > 1){
-
-
-
-                String soundboardName =  params[0].substring(1,params[0].length());
-                if (params[1].equalsIgnoreCase("help")){
-                    return handleHelpRequest(soundboardName, message);
-                }
-                if(params[0].equalsIgnoreCase("!add")){
-                    if(params[1].equalsIgnoreCase("help")){
-                        return handleAddHelp(chatChannel);
-                    }else {
-                        if(message.getAttachments() != null && message.getAttachments().size() >= 1){
-                            return handleAddClip(params[1], params[2], message.getAttachments().get(0).getUrl(), message);
-                        }
-
-                        return handleAddClip(params[1], params[2], params[3], message);
-
-                    }
-                }
-
-                return handleSoundClipRequest(message, soundboardName,  Arrays.copyOfRange(params,1,params.length));
-            }else{
-                if(params[0].equalsIgnoreCase("join") && params[1].length() > 0){
-                    handleJoin(message, params);
-                }
-            }
-        }else if(params.length == 1){
-            if(params[0].equalsIgnoreCase("stop")){
+        switch (messageParams.getType()){
+            case NONE:
+                return false;
+            case ADD_CLIP:
+                addClip(message, messageParams.getParam(SOUNDBOARD_NAME), messageParams.getParam(CLIP_NAME), messageParams.getParam(CLIP_URL));
+                break;
+            case ADD_SOUNDBOARD:
+                createSoundboard(message, messageParams.getParam(SOUNDBOARD_NAME));
+                break;
+            case PLAY_CLIP:
+                handleSoundClipRequest(message, messageParams.getParam(SOUNDBOARD_NAME), messageParams.getParam(CLIP_NAME));
+                break;
+            case HELP:
+                handleHelpRequest(message, messageParams.getParam(HELP_PARAM));
+                break;
+            case JOIN_CHANNEL:
+                joinChannel(message, messageParams.getParam(CHANNEL_NAME));
+                break;
+            case STOP_AUDIO:
                 audioDispatcher.stopAllAudio(message);
-            }
+                break;
         }
-        return false;
+
+        return true;
+
     }
 
 
@@ -112,51 +83,17 @@ public class MessageHandlerImpl implements MessageHandler {
         soundboardController.initGuild(guild.getID());
     }
 
-    private boolean handleSoundClipRequest(IMessage message, String soundboardName, String[] clipParam){
-        String expandedName = Util.fromArrayWithUnderscores(clipParam,0,clipParam.length);
+    private boolean createSoundboard(IMessage message, String soundboardName){
 
-        String guildId = Util.getGuildFromUserMessage(message).getID();
-
-        if(soundboardController.soundClipExists(guildId, soundboardName, expandedName)){
-            SoundClip soundClip = soundboardController.getSoundClip(guildId, soundboardName, expandedName);
-            audioDispatcher.playAudioClip(message, soundClip.getUrl());
+        try {
+            soundboardController.createSoundboard(Util.getGuildFromUserMessage(message).getID(), soundboardName);
+            // todo do feedback here
+            textDispatcher.dispatchText("soundboard \""+soundboardName+"\" created! Type: \n*!"+soundboardName+" help* \nto get started", message.getChannel());
             return true;
-        }
-        return false;
-    }
-
-    private boolean handleHelpRequest(String soundboardName, IMessage message){
-        String guildId = Util.getGuildFromUserMessage(message).getID();
-
-        if(soundboardController.soundBoardExists(guildId, soundboardName)) {
-
-            SoundBoard soundBoard = soundboardController.getSoundboard(guildId, soundboardName);
-
-            StringBuilder helpBuilder = new StringBuilder();
-            for (Map.Entry<String, SoundClip> entry : soundBoard.getClips().entrySet()){
-                helpBuilder.append("!"+soundboardName+" "+entry.getKey().replace("_"," ")+"\n");
-            }
-
-            textDispatcher.dispatchText(helpBuilder.toString(), message.getChannel());
-        }
-
-        return false;
-    }
-
-
-    private void handleJoin(IMessage message, String[] params){
-        IGuild guild = Util.getGuildFromUserMessage(message);
-        List<IVoiceChannel> voiceChannels = guild.getVoiceChannelsByName(Util.stringFromArray(params,1,params.length));
-        if(voiceChannels != null && voiceChannels.size() > 0){
-            IVoiceChannel voiceChannel = voiceChannels.get(0);
-            if(!voiceChannel.isConnected()) {
-                try {
-                    voiceChannel.join();
-                } catch (MissingPermissionsException e) {
-                    e.printStackTrace();
-                }
-
-            }
+        } catch (SoundboardExistException e) {
+            e.printStackTrace();
+            textDispatcher.dispatchText("soundboard \""+soundboardName+"\" already exists", message.getChannel());
+            return false;
         }
     }
 
@@ -167,7 +104,7 @@ public class MessageHandlerImpl implements MessageHandler {
      * @param clipUrl
      * @return if the soundclip was added successfully
      */
-    private boolean handleAddClip(String soundboardName, String clipName, String clipUrl, IMessage message){
+    private boolean addClip(IMessage message, String soundboardName, String clipName, String clipUrl){
         String guildId = Util.getGuildFromUserMessage(message).getID();
         try {
             soundboardController.saveSoundFileToSoundboard(guildId, clipUrl, soundboardName, clipName);
@@ -190,9 +127,84 @@ public class MessageHandlerImpl implements MessageHandler {
         return false;
     }
 
+    private boolean handleSoundClipRequest(IMessage message, String soundboardName, String clipName){
+//        String expandedName = Util.fromArrayWithUnderscores(clipParam,0,clipParam.length);
+        // todo multiple word clipName
+
+        String guildId = Util.getGuildFromUserMessage(message).getID();
+
+        if(soundboardController.soundClipExists(guildId, soundboardName, clipName)){
+            SoundClip soundClip = soundboardController.getSoundClip(guildId, soundboardName, clipName);
+            audioDispatcher.playAudioClip(message, soundClip.getUrl());
+            return true;
+        }
+        return false;
+    }
+
+    private boolean handleHelpRequest(IMessage message, String helpParam){
+        IGuild guild = Util.getGuildFromUserMessage(message);
+        if(helpParam.equalsIgnoreCase("add")){
+            handleAddHelp(message.getChannel());
+        }
+        else if(soundboardController.soundBoardExists(guild.getID(), helpParam)) {
+            handleSoundboardHelp(message, helpParam);
+        }else{
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean handleSoundboardHelp(IMessage message, String soundboardName){
+        String guildId = Util.getGuildFromUserMessage(message).getID();
+
+        if(soundboardController.soundBoardExists(guildId, soundboardName)) {
+
+            SoundBoard soundBoard = soundboardController.getSoundboard(guildId, soundboardName);
+            if(soundBoard == null){
+                dispatchSoundboardNotFound(soundboardName, message.getChannel());
+                return false;
+            }
+            if(soundBoard.getClipCount() == 0){
+
+                textDispatcher.dispatchText("*"+soundboardName+"* does not have any clips added yet" +
+                        "\nTo upload a sound clip, post a file to the chat room and in the message put *!add clip <name of the clip>*", message.getChannel());
+            }else {
+
+                StringBuilder helpBuilder = new StringBuilder();
+
+                for (Map.Entry<String, SoundClip> entry : soundBoard.getClips().entrySet()) {
+                    helpBuilder.append("!" + soundboardName + " " + entry.getKey().replace("_", " ") + "\n");
+                }
+
+                textDispatcher.dispatchText(helpBuilder.toString(), message.getChannel());
+            }
+        }
+
+        return false;
+    }
+
+
+    private void joinChannel(IMessage message, String channelName){
+        IGuild guild = Util.getGuildFromUserMessage(message);
+        List<IVoiceChannel> voiceChannels = guild.getVoiceChannelsByName(channelName);
+        if(voiceChannels != null && voiceChannels.size() > 0){
+            IVoiceChannel voiceChannel = voiceChannels.get(0);
+            if(!voiceChannel.isConnected()) {
+                try {
+                    voiceChannel.join();
+                } catch (MissingPermissionsException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
+
+
     private boolean handleAddHelp(IChannel chatChannel) {
         try {
-            chatChannel.sendMessage("Click the upload file button, in the comment put *!add <sounbard_name> <clip_name>*");
+            chatChannel.sendMessage("Click the upload file button, in the comment put *!add <sounbard name> <clip name>*");
         } catch (MissingPermissionsException e) {
             e.printStackTrace();
         } catch (RateLimitException e) {
@@ -201,5 +213,30 @@ public class MessageHandlerImpl implements MessageHandler {
             e.printStackTrace();
         }
         return true;
+    }
+
+    //        if(params.length >= 2){
+//            if(params[0].equalsIgnoreCase("!stats")){
+//                ChannelStatistics channelStatistics = new ChannelStatistics(chatChannel);
+//                if(params[1].equalsIgnoreCase("phrase") && params.length >= 3){
+//                    CountStatistic phraseCountStatistic = channelStatistics.getStatsForPhrase(Util.stringFromArray(params,2,params.length));
+//                    textDispatcher.dispatchText(phraseCountStatistic.getDisplayOutput(), chatChannel);
+//
+//                }else if(params[1].equalsIgnoreCase("count") && params.length >= 3){
+//                    if(params[2].equalsIgnoreCase("messages")) {
+//                        CountStatistic phraseCountStatistic = channelStatistics.getStatsForMessageCount();
+//                        textDispatcher.dispatchText(phraseCountStatistic.getDisplayOutput(), chatChannel);
+//                    }else if(params[2].equalsIgnoreCase("links")){
+//                        MultiCountStatistic phraseCountStatistic = channelStatistics.getStatsForLinks();
+//                        textDispatcher.dispatchText(phraseCountStatistic.getDisplayOutput(), chatChannel);
+//                    }
+//
+//
+//                }
+//            }
+//        }
+
+    private void dispatchSoundboardNotFound(String soundboardName, IChannel channel){
+        textDispatcher.dispatchText("Soundboard *"+soundboardName+"* not found", channel);
     }
 }

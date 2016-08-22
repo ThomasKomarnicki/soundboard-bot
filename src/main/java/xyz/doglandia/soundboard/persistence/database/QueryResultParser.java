@@ -55,6 +55,7 @@ public class QueryResultParser {
             if(soundboardName != null && !guildOptions.hasSoundboard(soundboardName)) {
                 SoundBoard soundBoard = new SoundBoard(guildOptions, resultSet.getInt("soundboard_id"));
                 soundBoard.setName(soundboardName);
+                soundBoard.setDisplayName(resultSet.getString("soundboard_display_name"));
                 guildOptions.putSoundboard(soundBoard);
             }
 
@@ -80,6 +81,7 @@ public class QueryResultParser {
         resultSet.next();
         SoundBoard soundBoard = new SoundBoard(guildOptions, resultSet.getInt("_id"));
         soundBoard.setName(resultSet.getString("name"));
+        soundBoard.setDisplayName(resultSet.getString("display_name"));
 
         return soundBoard;
     }

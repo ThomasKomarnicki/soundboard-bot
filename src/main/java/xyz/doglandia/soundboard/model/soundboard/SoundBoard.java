@@ -13,6 +13,7 @@ public class SoundBoard {
     private int id;
 
     private String name;
+    private String displayName;
 
     private GuildOptions guildOptions;
 
@@ -66,5 +67,17 @@ public class SoundBoard {
 
     public static String getNameAsKey(String name){
         return name.toLowerCase();
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public int getClipCount() {
+        return clips.size();
     }
 }

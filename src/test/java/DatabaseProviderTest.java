@@ -76,15 +76,15 @@ public class DatabaseProviderTest {
     public void testCreateDeleteSoundboard(){
         GuildOptions guildOptions = databaseProvider.getGuildOptionsByGuildId("test_guild_id_2");
 
-        SoundBoard soundBoard = databaseProvider.createSoundboard(guildOptions, "TestSoundboard1");
+        SoundBoard soundBoard = databaseProvider.createSoundboard(guildOptions, "testsoundboard1");
 
         guildOptions = databaseProvider.getGuildOptionsByGuildId(guildOptions.getGuildId());
 
 //        assertNotNull(guildOptions.getSoundBoards());
 //        assertTrue(guildOptions.getSoundBoards().size() > 0);
-        assertTrue(guildOptions.hasSoundboard("TestSoundboard1"));
+        assertTrue(guildOptions.hasSoundboard("testsoundboard1"));
 
-        databaseProvider.deleteSoundboard(guildOptions.getSoundboard("TestSoundboard1"));
+        databaseProvider.deleteSoundboard(guildOptions.getSoundboard("testsoundboard1"));
     }
 
     @Test

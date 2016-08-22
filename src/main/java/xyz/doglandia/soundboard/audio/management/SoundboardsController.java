@@ -52,7 +52,7 @@ public class SoundboardsController implements SoundboardController {
     @Override
     public boolean soundBoardExists(String guildId, String soundboardName) {
         GuildOptions guildOptions = getGuildOptions(guildId);
-        return !guildOptions.hasSoundboard(soundboardName);
+        return guildOptions.hasSoundboard(soundboardName);
 
     }
 
@@ -103,6 +103,19 @@ public class SoundboardsController implements SoundboardController {
     public void initGuild(String guildId) {
         GuildOptions guildOptions = getOrCreateGuildOptions(guildId);
         guilds.put(guildId, guildOptions);
+    }
+
+    @Override
+    public void createSoundboard(String guildId, String soundboardName) throws SoundboardExistException {
+        GuildOptions guildOptions = getGuildOptions(guildId);
+
+        SoundBoard soundBoard = guildOptions.getSoundboard(soundboardName.toLowerCase());
+        if(soundBoard != null){
+            // if soundboard already exists, throw exception
+            throw new SoundboardExistException(soundboardName);
+        }else{
+            dataProvider.createSoundboard(guildOptions, soundboardName);
+        }
     }
 
 

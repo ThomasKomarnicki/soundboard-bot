@@ -35,7 +35,7 @@ public class QueryBuilder {
     public String getGuildOptions(String guildId) {
         return "SELECT " +
         "guild_opts.guild_id, guild_opts._id, guild_opts.privileged_roles, soundboards._id as soundboard_id, " +
-        "soundboards.name as soundboard_name, sound_clips.clip_url, sound_clips._id as sound_clip_id, " +
+        "soundboards.name as soundboard_name, soundboards.display_name as soundboard_display_name, sound_clips.clip_url, sound_clips._id as sound_clip_id, " +
         "sound_clips.name as sound_clip_name " +
                 "FROM " +
         "guild_opts.guild_opts LEFT JOIN guild_opts.soundboards ON guild_opts._id = soundboards.guild_opts_id " +
@@ -52,17 +52,17 @@ public class QueryBuilder {
         return "SELECT * FROM "+GUILD_OPTS_TABLE+";";
     }
 
-    public String getSoundboardsForGuild(int guildOptionsId){
-        return "SELECT * FROM "+SOUNDBOARDS_TABLE+" WHERE guild_opts_id = "+guildOptionsId + ";";
-    }
+//    public String getSoundboardsForGuild(int guildOptionsId){
+//        return "SELECT * FROM "+SOUNDBOARDS_TABLE+" WHERE guild_opts_id = "+guildOptionsId + ";";
+//    }
+//
+//    public String getClipsForSoundboard(int soundBoardId) {
+//
+//        return "SELECT * FROM "+SOUND_CLIPS_TABLE+" WHERE soundboard_id = "+soundBoardId + ";";
+//    }
 
-    public String getClipsForSoundboard(int soundBoardId) {
-
-        return "SELECT * FROM "+SOUND_CLIPS_TABLE+" WHERE soundboard_id = "+soundBoardId + ";";
-    }
-
-    public String addSoundboard(GuildOptions guildOptions, String soundboardName) {
-        return "INSERT INTO " + SOUNDBOARDS_TABLE + " (guild_opts_id, name) VALUES ("+guildOptions.getId()+", '"+soundboardName+"');";
+    public String addSoundboard(GuildOptions guildOptions, String soundboardName, String displayName) {
+        return "INSERT INTO " + SOUNDBOARDS_TABLE + " (guild_opts_id, name, display_name) VALUES ("+guildOptions.getId()+", '"+soundboardName+"', '"+ displayName+"');";
     }
 
     public String addSoundClip(SoundBoard soundBoard, String name, String url) {
