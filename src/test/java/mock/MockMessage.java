@@ -16,9 +16,15 @@ import java.util.Optional;
 public class MockMessage implements IMessage{
 
     private String content;
+    private IChannel channel;
 
     public MockMessage(String content) {
         this.content = content;
+    }
+
+    public MockMessage(String content, IChannel channel){
+        this(content);
+        this.channel = channel;
     }
 
     @Override
@@ -28,7 +34,7 @@ public class MockMessage implements IMessage{
 
     @Override
     public IChannel getChannel() {
-        return null;
+        return channel;
     }
 
     @Override

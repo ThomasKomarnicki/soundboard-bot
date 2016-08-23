@@ -17,6 +17,13 @@ import java.util.Optional;
  * Created by tdk10 on 7/20/2016.
  */
 public class MockGuild implements IGuild {
+
+    private String id;
+
+    public MockGuild(String id){
+        this.id = id;
+    }
+
     @Override
     public String getOwnerID() {
         return null;
@@ -284,7 +291,7 @@ public class MockGuild implements IGuild {
 
     @Override
     public String getID() {
-        return null;
+        return id;
     }
 
     @Override

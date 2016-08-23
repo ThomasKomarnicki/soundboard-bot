@@ -18,6 +18,13 @@ import java.util.Map;
  * Created by tdk10 on 7/20/2016.
  */
 public class MockChannel implements IChannel {
+
+    private String guildId;
+
+    public MockChannel(String guildId) {
+        this.guildId = guildId;
+    }
+
     @Override
     public String getName() {
         return "TestChannel";
@@ -35,7 +42,7 @@ public class MockChannel implements IChannel {
 
     @Override
     public IGuild getGuild() {
-        return null;
+        return new MockGuild(guildId);
     }
 
     @Override

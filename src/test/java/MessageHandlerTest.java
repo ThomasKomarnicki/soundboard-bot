@@ -1,6 +1,9 @@
+import mock.MockAudioDispatcher;
 import xyz.doglandia.soundboard.audio.AudioDispatcher;
+import xyz.doglandia.soundboard.audio.management.SoundboardController;
 import xyz.doglandia.soundboard.audio.management.SoundboardFilesDataCreator;
 import xyz.doglandia.soundboard.audio.management.SoundboardSoundManager;
+import xyz.doglandia.soundboard.audio.management.SoundboardsController;
 import xyz.doglandia.soundboard.message.MessageHandler;
 import xyz.doglandia.soundboard.message.MessageHandlerImpl;
 import mock.MockChannel;
@@ -19,32 +22,27 @@ import java.io.File;
  */
 public class MessageHandlerTest {
 
-    SoundboardSoundManager soundManager;
+    private static final String GUILD_ID = "198587533750304769";
+
+    SoundboardController soundboardController;
 
     public MessageHandlerTest(){
-        soundManager = new SoundboardSoundManager(new SoundboardFilesDataCreator(new File("soundboards/")));
+//        soundManager = new SoundboardSoundManager(new SoundboardFilesDataCreator(new File("soundboards/")));
+        soundboardController = new SoundboardsController();
     }
 
     @Test
     public void testPlayAudioMessage(){
-        MessageHandler messageHandler = new MessageHandlerImpl(new AudioDispatcher() {
-            @Override
-            public void playAudioClip(IMessage message, File file) {
-                assertEquals(file.getName().toLowerCase(), "damn_son.mp3");
-            }
+        MessageHandler messageHandler = new MessageHandlerImpl(new MockAudioDispatcher() {
 
             @Override
             public void playAudioClip(IMessage message, String url) {
 
             }
 
-            @Override
-            public void stopAllAudio(IMessage message) {
+        }, null, soundboardController);
 
-            }
-        }, null, soundManager);
-
-        boolean handled = messageHandler.handleMessage(new MockMessage("!mlg damn son"), new MockChannel());
+        boolean handled = messageHandler.handleMessage(new MockMessage("!mlg damn son"), new MockChannel(GUILD_ID));
 
         assertTrue(handled);
     }
@@ -52,24 +50,17 @@ public class MessageHandlerTest {
     @Test
     public void testNoAudioMessage(){
 
-        MessageHandler messageHandler = new MessageHandlerImpl(new AudioDispatcher() {
-            @Override
-            public void playAudioClip(IMessage message, File file) {
-
-            }
+        MessageHandler messageHandler = new MessageHandlerImpl(new MockAudioDispatcher() {
 
             @Override
             public void playAudioClip(IMessage message, String url) {
 
             }
 
-            @Override
-            public void stopAllAudio(IMessage message) {
 
-            }
-        },null, soundManager);
+        },null, soundboardController);
 
-        boolean handled = messageHandler.handleMessage(new MockMessage("!mlg let me be free"), new MockChannel());
+        boolean handled = messageHandler.handleMessage(new MockMessage("!mlg let me be free"), new MockChannel(GUILD_ID));
 
         assertFalse(handled);
     }
@@ -79,15 +70,31 @@ public class MessageHandlerTest {
         MessageHandler messageHandler = new MessageHandlerImpl(null, new TextDispatcher() {
             @Override
             public void dispatchText(String message, IChannel chatChannel) {
-                assertTrue(message.contains( "!mlg airhorn"));
-                assertTrue(message.contains( "!mlg damn son"));
-                assertTrue(message.contains( "!mlg triple"));
-                assertTrue(message.contains( "!mlg wombo"));
+                assertTrue(message.contains( "!Pete hello"));
+                assertTrue(message.contains( "!Pete apple"));
             }
-        }, soundManager);
+        }, soundboardController);
 
-        boolean handled = messageHandler.handleMessage(new MockMessage("!mlg help"),  new MockChannel());
+        boolean handled = messageHandler.handleMessage(new MockMessage("!Pete help"),  new MockChannel(GUILD_ID));
 
         assertFalse(handled);
+    }
+
+    @Test
+    public void testHelpAdd(){
+        MessageHandlerImpl messageHandler = new MessageHandlerImpl(null, new TextDispatcher() {
+            @Override
+            public void dispatchText(String message, IChannel chatChannel) {
+                assertNotNull(message);
+//                assertTrue(message.contains( "!Pete hello"));
+                System.out.println("testHelpAdd() result:");
+                System.out.println(message);
+
+            }
+        }, soundboardController);
+        IChannel channel = new MockChannel(GUILD_ID);
+        boolean handled = messageHandler.handleMessage(new MockMessage("!add help", channel), channel);
+        assertTrue(handled);
+        System.out.println("finished testHelpAdd()");
     }
 }
