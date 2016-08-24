@@ -5,7 +5,31 @@ import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 
 /**
- * Created by tdk10 on 7/16/2016.
+ * handles the following message contents:
+ *
+ *  Play Clip:
+ *      !'soundboardName' 'clipName'
+ *
+ *  Add Clip:
+ *      !'soundboardName' add 'clipName' (with message attachment)
+ *
+ *  Soundboard Help:
+ *      !soundboard help
+ *
+ *  Help Flow:
+ *      !help
+ *
+ *          To see more, enter the number associated with the following help topics
+ *          (1) Help with creating a soundboard
+ *          (2) Help with adding a sound clip to a soundboard
+ *          (3) Help with playing a clip from a soundboard
+ *
+ *  Add Help:
+ *      !help add
+ *
+ *   Soundboard General Help:
+ *      !help soundboard
+ *
  */
 public interface MessageHandler {
 
