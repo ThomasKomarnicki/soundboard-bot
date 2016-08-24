@@ -110,13 +110,55 @@ public class MessageHandlerTest {
             public void dispatchText(String message, IChannel chatChannel) {
                 results[0] = message != null; // should happen before assertTrue on results[0]
 
-                System.out.println("testHelpAdd() result:");
-                System.out.println(message);
+                results[1] = message.contains("soundboard \"TestBoard\" created! Type:");
 
             }
         }, soundboardController);
 
         IChannel channel = new MockChannel(GUILD_ID);
         boolean handled = messageHandler.handleMessage(new MockMessage("!create soundboard TestBoard", channel), channel);
+
+        assertTrue(results[0]);
+        assertTrue(results[1]);
+    }
+
+    @Test
+    public void testDuplicateSoundboard(){
+        final boolean[] results = new boolean[2];
+        MessageHandlerImpl messageHandler = new MessageHandlerImpl(null, new TextDispatcher() {
+            @Override
+            public void dispatchText(String message, IChannel chatChannel) {
+                results[0] = message != null; // should happen before assertTrue on results[0]
+                results[1] = message.contains("already exists");
+
+            }
+        }, soundboardController);
+
+        IChannel channel = new MockChannel(GUILD_ID);
+        boolean handled = messageHandler.handleMessage(new MockMessage("!create soundboard Pete", channel), channel);
+
+        assertTrue(results[0]);
+        assertTrue(results[1]);
+    }
+
+    @Test
+    public void testAddClip(){
+        final boolean[] results = new boolean[2];
+        MessageHandlerImpl messageHandler = new MessageHandlerImpl(null, new TextDispatcher() {
+            @Override
+            public void dispatchText(String message, IChannel chatChannel) {
+                results[0] = message != null; // should happen before assertTrue on results[0]
+                results[1] = message.contains("Clip added");
+
+            }
+        }, soundboardController);
+
+        IChannel channel = new MockChannel(GUILD_ID);
+
+        IMessage.Attachment attachment = new IMessage.Attachment("test_clip_1",1000, null, "todo url"); // todo url
+        boolean handled = messageHandler.handleMessage(new MockMessage("!add Pete test_clip_1", channel, attachment), channel);
+
+        assertTrue(results[0]);
+        assertTrue(results[1]);
     }
 }

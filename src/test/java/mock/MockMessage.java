@@ -7,6 +7,7 @@ import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,8 @@ public class MockMessage implements IMessage{
     private String content;
     private IChannel channel;
 
+    private Attachment attachment;
+
     public MockMessage(String content) {
         this.content = content;
     }
@@ -26,6 +29,13 @@ public class MockMessage implements IMessage{
         this(content);
         this.channel = channel;
     }
+
+    public MockMessage(String content, IChannel channel, Attachment attachment){
+        this(content, channel);
+        this.attachment = attachment;
+
+    }
+
 
     @Override
     public String getContent() {
@@ -59,7 +69,13 @@ public class MockMessage implements IMessage{
 
     @Override
     public List<Attachment> getAttachments() {
-        return null;
+        if(attachment != null) {
+            List<Attachment> attachments = new ArrayList<>();
+            attachments.add(attachment);
+            return attachments;
+        }else{
+            return null;
+        }
     }
 
     @Override
