@@ -24,4 +24,22 @@ public class MessageSession {
         messages = new ArrayList<>();
         messages.add(startingMessage);
     }
+
+    public IMessage getLastBotMessage(){
+        for(int i = messages.size()-1; i >= 0; i--){
+            if(!messages.get(i).getAuthor().getID().equals(userId)){
+                return messages.get(i);
+            }
+        }
+        return null;
+    }
+
+    public IMessage getLastUserMessage(){
+        for(int i = messages.size()-1; i >= 0; i--){
+            if(messages.get(i).getAuthor().getID().equals(userId)){
+                return messages.get(i);
+            }
+        }
+        return null;
+    }
 }

@@ -3,6 +3,9 @@ package xyz.doglandia.soundboard.message;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.IRole;
+
+import java.util.List;
 
 /**
  * handles the following message contents:
@@ -37,4 +40,6 @@ public interface MessageHandler {
     boolean handleMention(IMessage message, IChannel chatChannel);
 
     void handleGuildCreated(IGuild guild);
+
+    void handleBotRolesChanged(IGuild guild, List<IRole> roles);
 }

@@ -7,6 +7,7 @@ import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by tdk10 on 7/16/2016.
@@ -26,4 +27,6 @@ public interface SoundboardController {
     void initGuild(String guildId);
 
     void createSoundboard(String guildId, String soundboardName) throws SoundboardAlreadyExistsException;
+
+    void setGuildPrivilegedRoles(String guildId, List<String> roleNames);
 }

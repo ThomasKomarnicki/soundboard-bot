@@ -15,6 +15,7 @@ import xyz.doglandia.soundboard.persistence.S3FileManager;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * controls interaction between DataProvider and Soundboard app
@@ -118,6 +119,12 @@ public class SoundboardsController implements SoundboardController {
         }else{
             dataProvider.createSoundboard(guildOptions, soundboardName);
         }
+    }
+
+    @Override
+    public void setGuildPrivilegedRoles(String guildId, List<String> roleNames) {
+        GuildOptions guildOptions = getGuildOptions(guildId);
+        guildOptions.setRollsThatCanAddClips(roleNames);
     }
 
 

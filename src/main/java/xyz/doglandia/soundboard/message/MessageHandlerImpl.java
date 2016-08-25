@@ -1,7 +1,6 @@
 package xyz.doglandia.soundboard.message;
 
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IVoiceChannel;
+import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
@@ -12,15 +11,15 @@ import xyz.doglandia.soundboard.exception.SoundboardAlreadyExistsException;
 import xyz.doglandia.soundboard.exception.SoundboardExistException;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IMessage;
 import xyz.doglandia.soundboard.text.TextDispatcher;
 import xyz.doglandia.soundboard.util.Util;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static xyz.doglandia.soundboard.message.MessageParams.Keys.*;
 
@@ -78,6 +77,14 @@ public class MessageHandlerImpl implements MessageHandler {
     @Override
     public void handleGuildCreated(IGuild guild) {
         soundboardController.initGuild(guild.getID());
+    }
+
+    @Override
+    public void handleBotRolesChanged(IGuild guild, List<IRole> roles) {
+
+        List<String> roleNames = roles.stream().map(IRole::getName).collect(Collectors.toList());
+
+        soundboardController.setGuildPrivilegedRoles(guild.getID(), roleNames);
     }
 
     private boolean createSoundboard(IMessage message, String soundboardName){
