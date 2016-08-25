@@ -1,5 +1,7 @@
 package xyz.doglandia.soundboard.message;
 
+import sx.blah.discord.handle.obj.IMessage;
+
 import java.util.HashMap;
 
 /**
@@ -13,7 +15,22 @@ public class MessageSessionController {
         this.sessions = new HashMap<>();
     }
 
-    public boolean UserInMessageSession(String userId){
+    public boolean userInMessageSession(String userId){
         return sessions.containsKey(userId);
     }
+
+    public MessageSession getMessageSession(String userId){
+        return sessions.get(userId);
+    }
+
+    public void endSession(String userId){
+
+    }
+
+    public void startMessageSession(IMessage message, MessageSession.MessageResponder messageResponder){
+        MessageSession messageSession = new MessageSession(message, this, messageResponder);
+        sessions.put(message.getAuthor().getID(), messageSession);
+    }
+
+
 }

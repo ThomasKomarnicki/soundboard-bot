@@ -28,20 +28,32 @@ import static xyz.doglandia.soundboard.message.MessageParams.Keys.*;
  */
 public class MessageHandlerImpl implements MessageHandler {
 
-    private AudioDispatcher audioDispatcher;
-    private TextDispatcher textDispatcher;
-    private SoundboardController soundboardController;
+    AudioDispatcher audioDispatcher;
+    TextDispatcher textDispatcher;
+    SoundboardController soundboardController;
 
-
+    MessageSessionController messageSessionController;
 
     public MessageHandlerImpl(AudioDispatcher audioDispatcher, TextDispatcher textDispatcher, SoundboardController soundboardController){
         this.textDispatcher = textDispatcher;
         this.audioDispatcher = audioDispatcher;
         this.soundboardController = soundboardController;
+
+        messageSessionController = new MessageSessionController();
     }
 
     @Override
     public boolean handleMessage(IMessage message, IChannel chatChannel) {
+
+
+        if(messageSessionController.userInMessageSession(message.getAuthor().getID())){
+
+            boolean messageSessionHandled = messageSessionController.getMessageSession(message.getAuthor().getID()).AddUserMessage(message);
+
+            if(messageSessionHandled){
+                return true;
+            }
+        }
 
         MessageParams messageParams = new MessageParams(message);
 
@@ -146,6 +158,12 @@ public class MessageHandlerImpl implements MessageHandler {
     }
 
     private boolean handleHelpRequest(IMessage message, String helpParam){
+
+        if(helpParam == null || helpParam.isEmpty()){
+            messageSessionController.startMessageSession(message, new HelpMessageResponder(textDispatcher));
+        }
+
+
         IGuild guild = Util.getGuildFromUserMessage(message);
         if(helpParam.equalsIgnoreCase("add")){
             handleAddHelp(message.getChannel());
