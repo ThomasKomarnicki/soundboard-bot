@@ -49,17 +49,13 @@ public class MessageHandlerImpl implements MessageHandler {
             case NONE:
                 return false;
             case ADD_CLIP:
-                addClip(message, messageParams.getParam(SOUNDBOARD_NAME), messageParams.getParam(CLIP_NAME), messageParams.getParam(CLIP_URL));
-                break;
+                return addClip(message, messageParams.getParam(SOUNDBOARD_NAME), messageParams.getParam(CLIP_NAME), messageParams.getParam(CLIP_URL));
             case ADD_SOUNDBOARD:
-                createSoundboard(message, messageParams.getParam(SOUNDBOARD_NAME));
-                break;
+                return createSoundboard(message, messageParams.getParam(SOUNDBOARD_NAME));
             case PLAY_CLIP:
-                handleSoundClipRequest(message, messageParams.getParam(SOUNDBOARD_NAME), messageParams.getParam(CLIP_NAME));
-                break;
+                return handleSoundClipRequest(message, messageParams.getParam(SOUNDBOARD_NAME), messageParams.getParam(CLIP_NAME));
             case HELP:
-                handleHelpRequest(message, messageParams.getParam(HELP_PARAM));
-                break;
+                return handleHelpRequest(message, messageParams.getParam(HELP_PARAM));
             case JOIN_CHANNEL:
                 joinChannel(message, messageParams.getParam(CHANNEL_NAME));
                 break;
@@ -149,6 +145,7 @@ public class MessageHandlerImpl implements MessageHandler {
         else if(soundboardController.soundBoardExists(guild.getID(), helpParam)) {
             handleSoundboardHelp(message, helpParam);
         }else{
+            dispatchSoundboardNotFound(helpParam, message.getChannel());
             return false;
         }
 
@@ -203,16 +200,13 @@ public class MessageHandlerImpl implements MessageHandler {
 
 
     private boolean handleAddHelp(IChannel chatChannel) {
-        try {
-            chatChannel.sendMessage("Click the upload file button, in the comment put *!add <sounbard name> <clip name>*");
-        } catch (MissingPermissionsException e) {
-            e.printStackTrace();
-        } catch (RateLimitException e) {
-            e.printStackTrace();
-        } catch (DiscordException e) {
-            e.printStackTrace();
-        }
+        textDispatcher.dispatchText("Click the upload file button, in the comment put *!add <sounbard name> <clip name>*",chatChannel);
+
         return true;
+    }
+
+    private void dispatchSoundboardNotFound(String soundboardName, IChannel channel){
+        textDispatcher.dispatchText("Soundboard *"+soundboardName+"* not found", channel);
     }
 
     //        if(params.length >= 2){
@@ -236,7 +230,5 @@ public class MessageHandlerImpl implements MessageHandler {
 //            }
 //        }
 
-    private void dispatchSoundboardNotFound(String soundboardName, IChannel channel){
-        textDispatcher.dispatchText("Soundboard *"+soundboardName+"* not found", channel);
-    }
+
 }
