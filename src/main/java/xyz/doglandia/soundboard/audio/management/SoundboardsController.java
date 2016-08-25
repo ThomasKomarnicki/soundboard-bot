@@ -60,7 +60,7 @@ public class SoundboardsController implements SoundboardController {
     @Override
     public SoundBoard getSoundboard(String guildId, String soundboardName) {
 
-        if(!soundBoardExists(guildId, soundboardName)){
+        if(soundBoardExists(guildId, soundboardName)){
             GuildOptions guildOptions = getGuildOptions(guildId);
             return guildOptions.getSoundboard(soundboardName);
         }
@@ -86,7 +86,8 @@ public class SoundboardsController implements SoundboardController {
 
         InputStream inputStream = response.body().byteStream();
 
-        File newClip = new File(soundBoard.getNameAsKey()+File.separator+SoundBoard.getNameAsKey(clipName)+".mp3");
+        File newClip = new File(/*File.separator + "temp" + File.separator + */soundBoard.getNameAsKey()+File.separator+SoundBoard.getNameAsKey(clipName)+".mp3");
+        newClip.createNewFile();
         OutputStream outStream = new FileOutputStream(newClip);
         byte[] buffer = new byte[4096];
         int len;

@@ -174,8 +174,8 @@ public class MessageHandlerTest {
 
         IChannel channel = new MockChannel(GUILD_ID);
 
-        IMessage.Attachment attachment = new IMessage.Attachment("test_clip_1",1000, null, "todo url"); // todo url
-        boolean handled = messageHandler.handleMessage(new MockMessage("!add Pete test_clip_1", channel, attachment), channel);
+        IMessage.Attachment attachment = new IMessage.Attachment("test_sound",1000, null, "https://s3.amazonaws.com/soundboard-app/extra/test_sound.mp3"); // todo url
+        boolean handled = messageHandler.handleMessage(new MockMessage("!add Pete test_sound", channel, attachment), channel);
 
         assertTrue(results[0]);
         assertTrue(results[1]);
