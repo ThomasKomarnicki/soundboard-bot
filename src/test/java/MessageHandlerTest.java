@@ -107,17 +107,17 @@ public class MessageHandlerTest {
                 results[0] = message != null; // should happen before assertTrue on results[0]
 //                assertNotNull(message);
 //                assertTrue(message.contains( "!Pete hello"));
-                System.out.println("testHelpAdd() result:");
-                System.out.println(message);
+//                System.out.println("testHelpAdd() result:");
+//                System.out.println(message);
 
             }
         }, soundboardController);
 
         IChannel channel = new MockChannel(GUILD_ID);
-        boolean handled = messageHandler.handleMessage(new MockMessage("!add help", channel), channel);
+        boolean handled = messageHandler.handleMessage(new MockMessage("!help add", channel), channel);
         assertTrue(handled);
         assertTrue(results[0]);
-        System.out.println("finished testHelpAdd()");
+//        System.out.println("finished testHelpAdd()");
     }
 
     @Test
@@ -127,12 +127,8 @@ public class MessageHandlerTest {
             @Override
             public void dispatchText(String message, IChannel chatChannel) {
                 results[0] = message != null; // should happen before assertTrue on results[0]
-                
+
                 results[1] = message.contains("soundboard \"TestBoard\" created! Type:");
-
-                System.out.println("testCreateSoundboard() result:");
-                System.out.println(message);
-
 
             }
         }, soundboardController);

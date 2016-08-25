@@ -4,6 +4,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import xyz.doglandia.soundboard.exception.InvalidAudioClipException;
+import xyz.doglandia.soundboard.exception.SoundboardAlreadyExistsException;
 import xyz.doglandia.soundboard.exception.SoundboardExistException;
 import xyz.doglandia.soundboard.model.guild.GuildOptions;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
@@ -106,13 +107,13 @@ public class SoundboardsController implements SoundboardController {
     }
 
     @Override
-    public void createSoundboard(String guildId, String soundboardName) throws SoundboardExistException {
+    public void createSoundboard(String guildId, String soundboardName) throws SoundboardAlreadyExistsException {
         GuildOptions guildOptions = getGuildOptions(guildId);
 
         SoundBoard soundBoard = guildOptions.getSoundboard(soundboardName.toLowerCase());
         if(soundBoard != null){
             // if soundboard already exists, throw exception
-            throw new SoundboardExistException(soundboardName);
+            throw new SoundboardAlreadyExistsException(soundboardName);
         }else{
             dataProvider.createSoundboard(guildOptions, soundboardName);
         }

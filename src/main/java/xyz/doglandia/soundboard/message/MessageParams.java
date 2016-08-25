@@ -40,8 +40,8 @@ public class MessageParams {
         if(messageParams.length >= 2){
             if(messageParams[0].startsWith("!") && messageParams[0].length() > 1){
 
-                String helpParam =  messageParams[0].substring(1,messageParams[0].length());
-                if (messageParams[1].equalsIgnoreCase("help")){
+                String helpParam =  messageParams[1];
+                if (messageParams[0].equalsIgnoreCase("!help")){
                     type = Type.HELP;
                     params.put(Keys.TYPE, "help");
                     params.put(Keys.HELP_PARAM, helpParam);

@@ -8,6 +8,7 @@ import sx.blah.discord.util.RateLimitException;
 import xyz.doglandia.soundboard.audio.AudioDispatcher;
 import xyz.doglandia.soundboard.audio.management.SoundboardController;
 import xyz.doglandia.soundboard.exception.InvalidAudioClipException;
+import xyz.doglandia.soundboard.exception.SoundboardAlreadyExistsException;
 import xyz.doglandia.soundboard.exception.SoundboardExistException;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
@@ -86,7 +87,7 @@ public class MessageHandlerImpl implements MessageHandler {
             // todo do feedback here
             textDispatcher.dispatchText("soundboard \""+soundboardName+"\" created! Type: \n*!"+soundboardName+" help* \nto get started", message.getChannel());
             return true;
-        } catch (SoundboardExistException e) {
+        } catch (SoundboardAlreadyExistsException e) {
             e.printStackTrace();
             textDispatcher.dispatchText("soundboard \""+soundboardName+"\" already exists", message.getChannel());
             return false;

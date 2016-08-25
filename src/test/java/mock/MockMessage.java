@@ -110,7 +110,7 @@ public class MockMessage implements IMessage{
 
     @Override
     public IGuild getGuild() {
-        return null;
+        return channel.getGuild();
     }
 
     @Override

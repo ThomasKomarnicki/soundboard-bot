@@ -1,6 +1,7 @@
 package xyz.doglandia.soundboard.audio.management;
 
 import xyz.doglandia.soundboard.exception.InvalidAudioClipException;
+import xyz.doglandia.soundboard.exception.SoundboardAlreadyExistsException;
 import xyz.doglandia.soundboard.exception.SoundboardExistException;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
@@ -24,5 +25,5 @@ public interface SoundboardController {
 
     void initGuild(String guildId);
 
-    void createSoundboard(String guildId, String soundboardName) throws SoundboardExistException;
+    void createSoundboard(String guildId, String soundboardName) throws SoundboardAlreadyExistsException;
 }
