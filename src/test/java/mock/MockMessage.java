@@ -49,7 +49,7 @@ public class MockMessage implements IMessage{
 
     @Override
     public IUser getAuthor() {
-        return null;
+        return new MockUser("mock_id","mock_name");
     }
 
     @Override
