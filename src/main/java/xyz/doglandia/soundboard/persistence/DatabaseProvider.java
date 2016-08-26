@@ -22,6 +22,14 @@ import java.util.Properties;
  */
 public class DatabaseProvider implements DataProvider {
 
+    private static DatabaseProvider instance;
+    public static DatabaseProvider instantiate(){
+        if(instance == null){
+            instance = new DatabaseProvider(new S3FileManager());
+        }
+        return instance;
+    }
+
     private static final String DB_NAME = "soundboardapp_1";
 
     private static final String GUILD_ID = "guild_id";
@@ -38,7 +46,7 @@ public class DatabaseProvider implements DataProvider {
     private QueryBuilder queryBuilder;
     private QueryResultParser queryResultParser;
 
-    public DatabaseProvider(FilesManager filesManager){
+    private DatabaseProvider(FilesManager filesManager){
         this.filesManager = filesManager;
         databaseName = DB_NAME;
 
@@ -167,6 +175,56 @@ public class DatabaseProvider implements DataProvider {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void close() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteSoundboardByName(String soundboardName){
+
+        try {
+            Statement st = connection.createStatement();
+            st.execute(queryBuilder.deleteSoundboardByName(soundboardName));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteSoundClipByName(String clipName){
+        try {
+            Statement st = connection.createStatement();
+            st.execute(queryBuilder.deleteClipByName(clipName));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean soundboardExists(String guildId, String soundboardName){
+        try {
+            Statement st = connection.createStatement();
+            return st.execute(queryBuilder.soundboardExists(guildId, soundboardName));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean soundClipExists(String guildId, String soundboardName, String clipName){
+        try {
+            Statement st = connection.createStatement();
+            return st.execute(queryBuilder.soundClipExists(guildId, soundboardName, clipName));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
     private String createFileKey(SoundBoard soundBoard, String name, File file){
         String ext = FilenameUtils.getExtension(file.getName());

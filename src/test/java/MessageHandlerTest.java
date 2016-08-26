@@ -1,4 +1,6 @@
 import mock.MockAudioDispatcher;
+import org.junit.After;
+import org.junit.Before;
 import xyz.doglandia.soundboard.audio.AudioDispatcher;
 import xyz.doglandia.soundboard.audio.management.SoundboardController;
 import xyz.doglandia.soundboard.audio.management.SoundboardFilesDataCreator;
@@ -11,6 +13,8 @@ import mock.MockMessage;
 import org.junit.Test;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
+import xyz.doglandia.soundboard.persistence.DatabaseProvider;
+import xyz.doglandia.soundboard.persistence.S3FileManager;
 import xyz.doglandia.soundboard.text.TextDispatcher;
 
 import static org.junit.Assert.*;
@@ -26,10 +30,15 @@ public class MessageHandlerTest {
 
     SoundboardController soundboardController;
 
+    DatabaseProvider databaseProvider;
+
     public MessageHandlerTest(){
 //        soundManager = new SoundboardSoundManager(new SoundboardFilesDataCreator(new File("soundboards/")));
         soundboardController = new SoundboardsController();
+
+        databaseProvider = DatabaseProvider.instantiate();
     }
+
 
     @Test
     public void testPlayAudioMessage(){
@@ -136,7 +145,8 @@ public class MessageHandlerTest {
         IChannel channel = new MockChannel(GUILD_ID);
         boolean handled = messageHandler.handleMessage(new MockMessage("!create soundboard TestBoard", channel), channel);
 
-
+        boolean existsInDatabase = databaseProvider.soundboardExists(GUILD_ID, "TestBoard");
+        assertTrue(existsInDatabase);
         assertTrue(results[0]);
         assertTrue(results[1]);
     }
@@ -174,15 +184,29 @@ public class MessageHandlerTest {
 
         IChannel channel = new MockChannel(GUILD_ID);
 
-        IMessage.Attachment attachment = new IMessage.Attachment("test_sound",1000, null, "https://s3.amazonaws.com/soundboard-app/extra/test_sound.mp3"); // todo url
+        IMessage.Attachment attachment = new IMessage.Attachment("test_sound", 1000, null, "https://s3.amazonaws.com/soundboard-app/extra/test_sound.mp3"); // todo url
         boolean handled = messageHandler.handleMessage(new MockMessage("!add Pete test_sound", channel, attachment), channel);
+
+        boolean existsInDatabase = databaseProvider.soundClipExists(GUILD_ID, "Pete", "test_sound");
+        assertTrue(existsInDatabase);
 
         assertTrue(results[0]);
         assertTrue(results[1]);
 
         assertTrue(handled);
+    }
 
-        assertTrue(results[0]);
+
+
+    @After
+    public void cleanUp(){
+        soundboardController.quit();
+
+        // delete test rows
+
+
+        databaseProvider.deleteSoundClipByName("test_sound");
+        databaseProvider.deleteSoundboardByName("TestBoard");
 
     }
 }

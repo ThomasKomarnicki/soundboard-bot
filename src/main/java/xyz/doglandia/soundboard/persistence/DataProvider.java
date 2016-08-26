@@ -26,5 +26,7 @@ public interface DataProvider {
 
     void deleteClip(SoundClip soundClip);
 
+    void close();
+
 
 }

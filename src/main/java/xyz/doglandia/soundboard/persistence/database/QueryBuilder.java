@@ -85,4 +85,20 @@ public class QueryBuilder {
         return "SELECT * FROM "+SOUNDBOARDS_TABLE+" WHERE guild_opts_id = "+guildOptions.getId() +" AND name = '"+name+"';";
     }
 
+
+    public String deleteSoundboardByName(String soundboardName) {
+        return "DELETE FROM "+SOUNDBOARDS_TABLE +" WHERE name = '"+soundboardName+"';";
+    }
+
+    public String deleteClipByName(String soundClipName) {
+        return "DELETE FROM "+SOUND_CLIPS_TABLE +" WHERE name = '"+soundClipName+"';";
+    }
+
+    public String soundboardExists(String guildId, String soundboardName) {
+        return "SELECT EXISTS (SELECT 1 from "+SOUNDBOARDS_TABLE+" WHERE name = '"+soundboardName+"');";
+    }
+
+    public String soundClipExists(String guildId, String soundboardName, String clipName) {
+        return "SELECT EXISTS (SELECT 1 from "+SOUND_CLIPS_TABLE+" WHERE name = '"+clipName+"');";
+    }
 }

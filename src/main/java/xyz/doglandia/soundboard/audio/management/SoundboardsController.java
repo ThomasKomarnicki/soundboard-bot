@@ -27,7 +27,7 @@ public class SoundboardsController implements SoundboardController {
     private HashMap<String, GuildOptions> guilds;
 
     public SoundboardsController(){
-        dataProvider = new DatabaseProvider(new S3FileManager()); // uses database provider and s3 file manager
+        dataProvider = DatabaseProvider.instantiate(); // uses database provider and s3 file manager
         guilds = new HashMap<>();
     }
 
@@ -127,6 +127,11 @@ public class SoundboardsController implements SoundboardController {
     public void setGuildPrivilegedRoles(String guildId, List<String> roleNames) {
         GuildOptions guildOptions = getGuildOptions(guildId);
         guildOptions.setRollsThatCanAddClips(roleNames);
+    }
+
+    @Override
+    public void quit() {
+        dataProvider.close();
     }
 
 

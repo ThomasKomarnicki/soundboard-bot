@@ -29,4 +29,6 @@ public interface SoundboardController {
     void createSoundboard(String guildId, String soundboardName) throws SoundboardAlreadyExistsException;
 
     void setGuildPrivilegedRoles(String guildId, List<String> roleNames);
+
+    void quit();
 }
