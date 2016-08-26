@@ -124,17 +124,11 @@ public class MessageHandlerImpl implements MessageHandler {
         String guildId = Util.getGuildFromUserMessage(message).getID();
         try {
             soundboardController.saveSoundFileToSoundboard(guildId, clipUrl, soundboardName, clipName);
-            message.getChannel().sendMessage("Clip added! *!"+soundboardName+" "+clipName+"*");
+            textDispatcher.dispatchText("Clip added! *!"+soundboardName+" "+clipName+"*", message.getChannel());
             return true;
         } catch (SoundboardExistException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (DiscordException e) {
-            e.printStackTrace();
-        } catch (RateLimitException e) {
-            e.printStackTrace();
-        } catch (MissingPermissionsException e) {
             e.printStackTrace();
         } catch (InvalidAudioClipException e) {
             e.printStackTrace();

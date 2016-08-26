@@ -1,5 +1,6 @@
 package xyz.doglandia.soundboard.persistence;
 
+import org.apache.commons.io.FilenameUtils;
 import xyz.doglandia.soundboard.model.guild.GuildOptions;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
@@ -126,19 +127,19 @@ public class DatabaseProvider implements DataProvider {
 
     @Override
     public SoundClip createSoundClip(SoundBoard soundBoard, String name, File file) {
-        String url = filesManager.uploadFile(createFileKey(soundBoard, name), file);
+        String url = filesManager.uploadFile(createFileKey(soundBoard, name, file), file);
 
         try {
             Statement st = connection.createStatement();
-            boolean result = st.execute(queryBuilder.addSoundClip(soundBoard, name, url));
+            st.execute(queryBuilder.addSoundClip(soundBoard, name, url));
 
             // query recently added sound clip and add to soundboard
-            if(result){
+//            if(result){
                 st = connection.createStatement();
                 ResultSet soundClipResults = st.executeQuery(queryBuilder.getSoundClip(soundBoard, name));
                 SoundClip soundClip = queryResultParser.createSoundClip(soundClipResults);
                 return soundClip;
-            }
+//            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -167,8 +168,9 @@ public class DatabaseProvider implements DataProvider {
         }
     }
 
-    private String createFileKey(SoundBoard soundBoard, String name){
-        return Constants.ENVIRONMENT_NAME +"/"+soundBoard.getGuildOptions().getGuildId()+"/"+soundBoard.getNameAsKey()+"/"+name;
+    private String createFileKey(SoundBoard soundBoard, String name, File file){
+        String ext = FilenameUtils.getExtension(file.getName());
+        return Constants.ENVIRONMENT_NAME +"/"+soundBoard.getGuildOptions().getGuildId()+"/"+soundBoard.getNameAsKey()+"/"+name+"."+ext;
     }
 
 }

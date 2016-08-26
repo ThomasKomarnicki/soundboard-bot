@@ -87,7 +87,9 @@ public class SoundboardsController implements SoundboardController {
 
         InputStream inputStream = response.body().byteStream();
 
-        File newClip = new File(/*File.separator + "temp" + File.separator + */soundBoard.getNameAsKey()+File.separator+SoundBoard.getNameAsKey(clipName)+".mp3");
+
+
+        File newClip = new File("temp"+File.separator+soundBoard.getNameAsKey()+"-"+SoundBoard.getNameAsKey(clipName)+".mp3");
         newClip.createNewFile();
         OutputStream outStream = new FileOutputStream(newClip);
         byte[] buffer = new byte[4096];

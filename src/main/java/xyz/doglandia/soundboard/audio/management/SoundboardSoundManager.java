@@ -9,6 +9,7 @@ import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 import xyz.doglandia.soundboard.model.soundboard.SoundboardMeta;
 
 import java.io.*;
+import java.util.List;
 
 /**
  * meta.json file contains information about subdirectories which contain soundboard files
@@ -122,6 +123,11 @@ public class SoundboardSoundManager implements SoundboardController {
 
     @Override
     public void createSoundboard(String guildId, String soundboardName) {
+
+    }
+
+    @Override
+    public void setGuildPrivilegedRoles(String guildId, List<String> roleNames) {
 
     }
 }
