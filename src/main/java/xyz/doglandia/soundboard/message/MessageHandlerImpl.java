@@ -148,6 +148,8 @@ public class MessageHandlerImpl implements MessageHandler {
             audioDispatcher.playAudioClip(message, soundClip.getUrl());
             return true;
         }
+
+        textDispatcher.dispatchText("the soundboard "+soundboardName+" was not found", message.getChannel());
         return false;
     }
 

@@ -3,6 +3,7 @@ package xyz.doglandia.soundboard.persistence;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import xyz.doglandia.soundboard.util.Sensitive;
 
 import java.io.File;

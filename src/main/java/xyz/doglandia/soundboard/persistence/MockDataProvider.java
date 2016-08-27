@@ -67,4 +67,9 @@ public class MockDataProvider implements DataProvider {
     public void deleteClip(SoundClip soundClip) {
 
     }
+
+    @Override
+    public void close() {
+
+    }
 }

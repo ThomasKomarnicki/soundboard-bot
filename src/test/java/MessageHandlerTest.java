@@ -1,5 +1,6 @@
 import mock.MockAudioDispatcher;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import xyz.doglandia.soundboard.audio.AudioDispatcher;
 import xyz.doglandia.soundboard.audio.management.SoundboardController;
@@ -51,7 +52,8 @@ public class MessageHandlerTest {
 
         }, null, soundboardController);
 
-        boolean handled = messageHandler.handleMessage(new MockMessage("!mlg damn son"), new MockChannel(GUILD_ID));
+        IChannel channel = new MockChannel(GUILD_ID);
+        boolean handled = messageHandler.handleMessage(new MockMessage("!Pete hello", channel), channel);
 
         assertTrue(handled);
     }
@@ -67,9 +69,15 @@ public class MessageHandlerTest {
             }
 
 
-        },null, soundboardController);
+        }, new TextDispatcher() {
+            @Override
+            public void dispatchText(String message, IChannel chatChannel) {
 
-        boolean handled = messageHandler.handleMessage(new MockMessage("!mlg let me be free"), new MockChannel(GUILD_ID));
+            }
+        }, soundboardController);
+
+        IChannel channel = new MockChannel(GUILD_ID);
+        boolean handled = messageHandler.handleMessage(new MockMessage("!Pete let me be free", channel), channel);
 
         assertFalse(handled);
     }
@@ -79,14 +87,20 @@ public class MessageHandlerTest {
         MessageHandler messageHandler = new MessageHandlerImpl(null, new TextDispatcher() {
             @Override
             public void dispatchText(String message, IChannel chatChannel) {
-                assertTrue(message.contains( "!Pete hello"));
-                assertTrue(message.contains( "!Pete apple"));
+                assertTrue(message.contains("!Pete hello"));
+
             }
         }, soundboardController);
 
-        boolean handled = messageHandler.handleMessage(new MockMessage("!Pete help"),  new MockChannel(GUILD_ID));
+        IChannel channel = new MockChannel(GUILD_ID);
+        boolean handled = messageHandler.handleMessage(new MockMessage("!help Pete", channel),  channel);
 
         assertTrue(handled);
+    }
+
+    @Test
+    public void testHelpForEmptySoundboard(){
+
     }
 
     @Test
@@ -100,7 +114,8 @@ public class MessageHandlerTest {
             }
         }, soundboardController);
 
-        boolean handled = messageHandler.handleMessage(new MockMessage("!this_soundboard_doesnt_exist help"),  new MockChannel(GUILD_ID));
+        IChannel channel = new MockChannel(GUILD_ID);
+        boolean handled = messageHandler.handleMessage(new MockMessage("!this_soundboard_doesnt_exist dog", channel),  channel);
 
         assertFalse(handled);
         assertTrue(results[0]);
@@ -200,13 +215,12 @@ public class MessageHandlerTest {
 
     @After
     public void cleanUp(){
-        soundboardController.quit();
 
         // delete test rows
 
 
         databaseProvider.deleteSoundClipByName("test_sound");
-        databaseProvider.deleteSoundboardByName("TestBoard");
+        databaseProvider.deleteSoundboardByName("testboard");
 
     }
 }

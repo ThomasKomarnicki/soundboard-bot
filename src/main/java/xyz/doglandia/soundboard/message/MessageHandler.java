@@ -14,7 +14,10 @@ import java.util.List;
  *      !'soundboardName' 'clipName'
  *
  *  Add Clip:
- *      !'soundboardName' add 'clipName' (with message attachment)
+ *      !add 'soundboardName' 'clipName' (with message attachment)
+ *
+ *  Create Soundboard:
+ *      !create soundboard 'soundboardName'
  *
  *  Soundboard Help:
  *      !soundboard help

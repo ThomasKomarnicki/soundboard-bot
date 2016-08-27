@@ -130,4 +130,9 @@ public class SoundboardSoundManager implements SoundboardController {
     public void setGuildPrivilegedRoles(String guildId, List<String> roleNames) {
 
     }
+
+    @Override
+    public void quit() {
+
+    }
 }

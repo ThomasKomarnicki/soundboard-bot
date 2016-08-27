@@ -19,7 +19,7 @@ public class DatabaseProviderTest {
     DatabaseProvider databaseProvider;
 
     public DatabaseProviderTest(){
-        databaseProvider = new DatabaseProvider(new S3FileManager());
+        databaseProvider = DatabaseProvider.instantiate();
 
     }
 
