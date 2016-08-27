@@ -26,8 +26,8 @@ import java.util.List;
  *      !help
  *
  *          To see more, enter the number associated with the following help topics
- *          (1) Help with creating a soundboard
- *          (2) Help with adding a sound clip to a soundboard
+ *          (1) Help with adding a sound clip to a soundboard
+ *          (2) Help with creating a soundboard
  *          (3) Help with playing a clip from a soundboard
  *
  *  Add Help:

@@ -157,6 +157,8 @@ public class MessageHandlerImpl implements MessageHandler {
 
         if(helpParam == null || helpParam.isEmpty()){
             messageSessionController.startMessageSession(message, new HelpMessageResponder(textDispatcher));
+            textDispatcher.dispatchText(HelpMessageResponder.HELP_START, message.getChannel());
+            return true;
         }
 
 

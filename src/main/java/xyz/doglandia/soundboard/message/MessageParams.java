@@ -79,10 +79,15 @@ public class MessageParams {
                 }
             }
         }else if(messageParams.length == 1){
-            if(messageParams[0].equalsIgnoreCase("stop")){
+            if(messageParams[0].equalsIgnoreCase("!stop")){
                 type = Type.STOP_AUDIO;
                 return;
 //                audioDispatcher.stopAllAudio(message);
+            }
+            if(messageParams[0].equalsIgnoreCase("!help")){
+                type = Type.HELP;
+                params.put(Keys.TYPE, "help");
+                return;
             }
         }
         type = Type.NONE;

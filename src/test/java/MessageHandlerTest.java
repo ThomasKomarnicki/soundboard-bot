@@ -1,12 +1,8 @@
 import mock.MockAudioDispatcher;
 import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import xyz.doglandia.soundboard.audio.AudioDispatcher;
 import xyz.doglandia.soundboard.audio.management.SoundboardController;
-import xyz.doglandia.soundboard.audio.management.SoundboardFilesDataCreator;
-import xyz.doglandia.soundboard.audio.management.SoundboardSoundManager;
 import xyz.doglandia.soundboard.audio.management.SoundboardsController;
+import xyz.doglandia.soundboard.message.HelpMessageResponder;
 import xyz.doglandia.soundboard.message.MessageHandler;
 import xyz.doglandia.soundboard.message.MessageHandlerImpl;
 import mock.MockChannel;
@@ -15,12 +11,9 @@ import org.junit.Test;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 import xyz.doglandia.soundboard.persistence.DatabaseProvider;
-import xyz.doglandia.soundboard.persistence.S3FileManager;
 import xyz.doglandia.soundboard.text.TextDispatcher;
 
 import static org.junit.Assert.*;
-
-import java.io.File;
 
 /**
  * Created by tdk10 on 7/20/2016.
@@ -43,18 +36,19 @@ public class MessageHandlerTest {
 
     @Test
     public void testPlayAudioMessage(){
+        final boolean[] results = new boolean[1];
         MessageHandler messageHandler = new MessageHandlerImpl(new MockAudioDispatcher() {
 
             @Override
             public void playAudioClip(IMessage message, String url) {
-
+                results[0] = url != null;
             }
 
         }, null, soundboardController);
 
         IChannel channel = new MockChannel(GUILD_ID);
         boolean handled = messageHandler.handleMessage(new MockMessage("!Pete hello", channel), channel);
-
+        assertTrue(results[0]);
         assertTrue(handled);
     }
 
@@ -80,6 +74,48 @@ public class MessageHandlerTest {
         boolean handled = messageHandler.handleMessage(new MockMessage("!Pete let me be free", channel), channel);
 
         assertFalse(handled);
+    }
+
+    @Test
+    public void testHelpSession(){
+        final int[] messageCount = new int[]{0};
+        final boolean[] results = new boolean[2];
+
+        MessageHandler messageHandler = new MessageHandlerImpl(null, new TextDispatcher() {
+            @Override
+            public void dispatchText(String message, IChannel chatChannel) {
+                if(messageCount[0] == 0){
+                    results[0] = message.equals(HelpMessageResponder.HELP_START);
+                }else if(messageCount[0] == 1){
+                    results[0] = message.equals(HelpMessageResponder.ADD_HELP);
+                }
+                else if(messageCount[0] == 2){
+                    results[0] = message.equals(HelpMessageResponder.HELP_START);
+                }else if(messageCount[0] == 3){
+                    results[0] = message.equals(HelpMessageResponder.CREATE_SOUNDBOARD_HELP);
+                }
+
+                messageCount[0] = messageCount[0] + 1;
+            }
+        }, soundboardController);
+
+        IChannel channel = new MockChannel(GUILD_ID);
+        boolean handled = messageHandler.handleMessage(new MockMessage("!help", channel), channel);
+        assertTrue(handled);
+        assertTrue(results[0]);
+
+        handled = messageHandler.handleMessage(new MockMessage("1", channel), channel);
+        assertTrue(handled);
+        assertTrue(results[0]);
+
+        handled = messageHandler.handleMessage(new MockMessage("!help", channel), channel);
+        assertTrue(handled);
+        assertTrue(results[0]);
+
+        handled = messageHandler.handleMessage(new MockMessage("2", channel), channel);
+        assertTrue(handled);
+        assertTrue(results[0]);
+
     }
 
     @Test
