@@ -31,4 +31,6 @@ public interface SoundboardController {
     void setGuildPrivilegedRoles(String guildId, List<String> roleNames);
 
     void quit();
+
+    boolean matchesPermissions(String guildId, List<String> userRoles);
 }

@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
  */
 public class MessageHandlerTest {
 
-    private static final String GUILD_ID = "198587533750304769";
+    public static final String GUILD_ID = "198587533750304769";
 
     SoundboardController soundboardController;
 

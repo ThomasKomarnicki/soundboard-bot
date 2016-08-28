@@ -44,7 +44,7 @@ public class QueryResultParser {
                 if(resultSet.getArray(PRIVILEGED_ROLES) != null) {
                     String[] privilegedRoles = (String[]) resultSet.getArray(PRIVILEGED_ROLES).getArray();
 
-                    guildOptions.setRollsThatCanAddClips(Arrays.asList(privilegedRoles));
+                    guildOptions.setRolesThatCanAddClips(Arrays.asList(privilegedRoles));
                 }
 
             }

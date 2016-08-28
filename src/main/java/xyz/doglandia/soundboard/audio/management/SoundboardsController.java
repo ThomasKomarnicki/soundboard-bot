@@ -11,7 +11,6 @@ import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 import xyz.doglandia.soundboard.persistence.DataProvider;
 import xyz.doglandia.soundboard.persistence.DatabaseProvider;
-import xyz.doglandia.soundboard.persistence.S3FileManager;
 
 import java.io.*;
 import java.util.HashMap;
@@ -126,12 +125,20 @@ public class SoundboardsController implements SoundboardController {
     @Override
     public void setGuildPrivilegedRoles(String guildId, List<String> roleNames) {
         GuildOptions guildOptions = getGuildOptions(guildId);
-        guildOptions.setRollsThatCanAddClips(roleNames);
+        guildOptions.setRolesThatCanAddClips(roleNames);
+
+        dataProvider.updateGuildOptions(guildOptions);
     }
 
     @Override
     public void quit() {
         dataProvider.close();
+    }
+
+    @Override
+    public boolean matchesPermissions(String guildId, List<String> userRoles) {
+        GuildOptions guildOptions = getOrCreateGuildOptions(guildId);
+        return guildOptions.matchesRoles(userRoles);
     }
 
 

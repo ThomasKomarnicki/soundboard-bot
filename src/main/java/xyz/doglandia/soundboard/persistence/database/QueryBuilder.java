@@ -25,7 +25,7 @@ public class QueryBuilder {
         StringBuilder stringBuilder = new StringBuilder();
         String whereClause = " WHERE guild_id = '"+guildOptions.getGuildId()+"'";
 
-        stringBuilder.append("UPDATE guild_opts.guild_opts SET privileged_roles = "+ SqlUtil.stringListToValue(guildOptions.getRollsThatCanAddClips()));
+        stringBuilder.append("UPDATE guild_opts.guild_opts SET privileged_roles = "+ SqlUtil.stringListToValue(guildOptions.getRolesThatCanAddClips()));
         stringBuilder.append(whereClause);
         stringBuilder.append(";");
 

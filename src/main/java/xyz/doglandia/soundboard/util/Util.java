@@ -2,7 +2,12 @@ package xyz.doglandia.soundboard.util;
 
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by tdk10 on 7/22/2016.
@@ -54,5 +59,9 @@ public class Util {
 
         }
         return builder.toString();
+    }
+
+    public static List<String> ListRoleNames(List<IRole> roles){
+        return roles.stream().map(IRole::getName).collect(Collectors.toList());
     }
 }

@@ -1,9 +1,7 @@
 import org.junit.Test;
 import xyz.doglandia.soundboard.model.guild.GuildOptions;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
-import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 import xyz.doglandia.soundboard.persistence.DatabaseProvider;
-import xyz.doglandia.soundboard.persistence.S3FileManager;
 
 import static org.junit.Assert.*;
 
@@ -39,20 +37,20 @@ public class DatabaseProviderTest {
         List<String> roles = new ArrayList<>();
         roles.add("TestRole1");
         roles.add("TestRole2");
-        guildOptions.setRollsThatCanAddClips(roles);
+        guildOptions.setRolesThatCanAddClips(roles);
 
         databaseProvider.updateGuildOptions(guildOptions);
 
         roles = new ArrayList<>();
         roles.add("UpdatedRole1");
         roles.add("UpdatedRole2");
-        guildOptions.setRollsThatCanAddClips(roles);
+        guildOptions.setRolesThatCanAddClips(roles);
 
         databaseProvider.updateGuildOptions(guildOptions);
 
         GuildOptions refreshed = databaseProvider.getGuildOptionsByGuildId(guildOptions.getGuildId());
 
-        assertArrayEquals(roles.toArray(), refreshed.getRollsThatCanAddClips().toArray());
+        assertArrayEquals(roles.toArray(), refreshed.getRolesThatCanAddClips().toArray());
     }
 
     @Test
@@ -111,7 +109,7 @@ public class DatabaseProviderTest {
         List<String> roles = new ArrayList<>();
         roles.add("TestRole1");
         roles.add("TestRole2");
-        guildOptions.setRollsThatCanAddClips(roles);
+        guildOptions.setRolesThatCanAddClips(roles);
         return guildOptions;
     }
 }

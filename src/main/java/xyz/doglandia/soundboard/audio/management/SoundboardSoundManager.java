@@ -135,4 +135,9 @@ public class SoundboardSoundManager implements SoundboardController {
     public void quit() {
 
     }
+
+    @Override
+    public boolean matchesPermissions(String guildId, List<String> userRoles) {
+        return false;
+    }
 }

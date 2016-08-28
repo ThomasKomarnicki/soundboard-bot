@@ -1,12 +1,11 @@
 package xyz.doglandia.soundboard.model.guild;
 
-import sx.blah.discord.handle.obj.IGuild;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -16,7 +15,7 @@ public class GuildOptions {
 
     private int id;
 
-    private List<String> rollsThatCanAddClips;
+    private HashSet<String> rolesThatCanAddClips;
 
     private String guildId;
 
@@ -24,6 +23,7 @@ public class GuildOptions {
 
     public GuildOptions(){
         soundBoards = new HashMap<>();
+        rolesThatCanAddClips = new HashSet<>();
     }
 
     public GuildOptions(int id){
@@ -40,13 +40,16 @@ public class GuildOptions {
         this.guildId = guildId;
     }
 
-    public void setRollsThatCanAddClips(List<String> rollsThatCanAddClips) {
-        this.rollsThatCanAddClips = new ArrayList<>();
-        this.rollsThatCanAddClips.addAll(rollsThatCanAddClips);
+    public void setRolesThatCanAddClips(List<String> rolesThatCanAddClips) {
+        this.rolesThatCanAddClips = new HashSet<>();
+        this.rolesThatCanAddClips.addAll(rolesThatCanAddClips);
+
     }
 
-    public List<String> getRollsThatCanAddClips() {
-        return rollsThatCanAddClips;
+    public List<String> getRolesThatCanAddClips() {
+        List<String> asList = new ArrayList<>();
+        asList.addAll(rolesThatCanAddClips);
+        return asList;
     }
 
     public int getId() {
@@ -67,6 +70,16 @@ public class GuildOptions {
 
     public void putSoundboard(SoundBoard soundBoard){
         soundBoards.put(soundBoard.getNameAsKey(), soundBoard);
+    }
+
+    public boolean matchesRoles(List<String> roleNames){
+        for(String role : roleNames){
+            if(rolesThatCanAddClips.contains(role)){
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
