@@ -1,6 +1,7 @@
 package xyz.doglandia.soundboard.message;
 
 import sx.blah.discord.handle.obj.IMessage;
+import xyz.doglandia.soundboard.util.Util;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -53,7 +54,7 @@ public class MessageParams {
 
                     type = Type.ADD_CLIP;
                     params.put(Keys.SOUNDBOARD_NAME, messageParams[1]);
-                    params.put(Keys.CLIP_NAME, messageParams[2]);
+                    params.put(Keys.CLIP_NAME,  Util.stringFromArray(messageParams,2,messageParams.length));
                     params.put(Keys.CLIP_URL, message.getAttachments().get(0).getUrl());
                     return;
 
@@ -66,7 +67,7 @@ public class MessageParams {
 
                     type = Type.PLAY_CLIP;
                     params.put(Keys.SOUNDBOARD_NAME, messageParams[0].substring(1, messageParams[0].length()));
-                    params.put(Keys.CLIP_NAME, messageParams[1]);
+                    params.put(Keys.CLIP_NAME, Util.stringFromArray(messageParams,1,messageParams.length));
                     return;
                 }
 

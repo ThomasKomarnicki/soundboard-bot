@@ -235,10 +235,36 @@ public class MessageHandlerTest {
 
         IChannel channel = new MockChannel(GUILD_ID);
 
-        IMessage.Attachment attachment = new IMessage.Attachment("test_sound", 1000, null, "https://s3.amazonaws.com/soundboard-app/extra/test_sound.mp3"); // todo url
+        IMessage.Attachment attachment = new IMessage.Attachment("test_sound", 1000, null, "https://s3.amazonaws.com/soundboard-app/extra/test_sound.mp3");
         boolean handled = messageHandler.handleMessage(new MockMessage("!add Pete test_sound", channel, attachment), channel);
 
         boolean existsInDatabase = databaseProvider.soundClipExists(GUILD_ID, "Pete", "test_sound");
+        assertTrue(existsInDatabase);
+
+        assertTrue(results[0]);
+        assertTrue(results[1]);
+
+        assertTrue(handled);
+    }
+
+    @Test
+    public void testAddClipLongName(){
+        final boolean[] results = new boolean[2];
+        MessageHandlerImpl messageHandler = new MessageHandlerImpl(null, new TextDispatcher() {
+            @Override
+            public void dispatchText(String message, IChannel chatChannel) {
+                results[0] = message != null; // should happen before assertTrue on results[0]
+                results[1] = message.contains("Clip added");
+
+            }
+        }, soundboardController);
+
+        IChannel channel = new MockChannel(GUILD_ID);
+
+        IMessage.Attachment attachment = new IMessage.Attachment("test_sound", 1000, null, "https://s3.amazonaws.com/soundboard-app/extra/test_sound.mp3");
+        boolean handled = messageHandler.handleMessage(new MockMessage("!add Pete test sound with space", channel, attachment), channel);
+
+        boolean existsInDatabase = databaseProvider.soundClipExists(GUILD_ID, "Pete", "test sound with space");
         assertTrue(existsInDatabase);
 
         assertTrue(results[0]);

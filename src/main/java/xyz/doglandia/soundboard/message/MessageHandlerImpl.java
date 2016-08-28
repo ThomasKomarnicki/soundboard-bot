@@ -143,13 +143,18 @@ public class MessageHandlerImpl implements MessageHandler {
 
         String guildId = Util.getGuildFromUserMessage(message).getID();
 
-        if(soundboardController.soundClipExists(guildId, soundboardName, clipName)){
-            SoundClip soundClip = soundboardController.getSoundClip(guildId, soundboardName, clipName);
-            audioDispatcher.playAudioClip(message, soundClip.getUrl());
-            return true;
-        }
+        if(soundboardController.soundBoardExists(guildId, soundboardName)) {
 
-        textDispatcher.dispatchText("the soundboard "+soundboardName+" was not found", message.getChannel());
+            if (soundboardController.soundClipExists(guildId, soundboardName, clipName)) {
+                SoundClip soundClip = soundboardController.getSoundClip(guildId, soundboardName, clipName);
+                audioDispatcher.playAudioClip(message, soundClip.getUrl());
+                return true;
+            }else{
+                textDispatcher.dispatchText("sound clip *" + clipName + "* was not found for soundboard *"+soundboardName+"*", message.getChannel());
+            }
+        }else {
+            textDispatcher.dispatchText("the soundboard " + soundboardName + " was not found", message.getChannel());
+        }
         return false;
     }
 
