@@ -74,7 +74,7 @@ public class MessageParams {
             }else{
                 if(messageParams[0].equalsIgnoreCase("join") && messageParams[1].length() > 0){
                     type = Type.JOIN_CHANNEL;
-                    params.put(Keys.CHANNEL_NAME, messageParams[1]);
+                    params.put(Keys.CHANNEL_NAME, Util.stringFromArray(messageParams, 1, messageParams.length));
                     return;
 //                    handleJoin(message, messageParams);
                 }

@@ -283,6 +283,7 @@ public class MessageHandlerTest {
 
         databaseProvider.deleteSoundClipByName("test_sound");
         databaseProvider.deleteSoundboardByName("testboard");
+        databaseProvider.deleteSoundClipByName("test sound with space");
 
     }
 }

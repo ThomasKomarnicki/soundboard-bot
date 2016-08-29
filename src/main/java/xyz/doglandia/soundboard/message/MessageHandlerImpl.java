@@ -213,7 +213,11 @@ public class MessageHandlerImpl implements MessageHandler {
 
     private void joinChannel(IMessage message, String channelName){
         IGuild guild = Util.getGuildFromUserMessage(message);
+        if(guild == null){
+            textDispatcher.dispatchText("could not join channel *"+channelName+"*", message.getChannel());
+        }
         List<IVoiceChannel> voiceChannels = guild.getVoiceChannelsByName(channelName);
+
         if(voiceChannels != null && voiceChannels.size() > 0){
             IVoiceChannel voiceChannel = voiceChannels.get(0);
             if(!voiceChannel.isConnected()) {
