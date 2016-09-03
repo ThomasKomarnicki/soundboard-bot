@@ -16,7 +16,7 @@ import xyz.doglandia.soundboard.text.TextDispatcher;
 import static org.junit.Assert.*;
 
 /**
- * Created by tdk10 on 7/20/2016.
+ * requires environment to
  */
 public class MessageHandlerTest {
 
@@ -47,7 +47,7 @@ public class MessageHandlerTest {
         }, null, soundboardController);
 
         IChannel channel = new MockChannel(GUILD_ID);
-        boolean handled = messageHandler.handleMessage(new MockMessage("!Pete hello", channel), channel);
+        boolean handled = messageHandler.handleMessage(new MockMessage("!pete hello", channel), channel);
         assertTrue(results[0]);
         assertTrue(handled);
     }
@@ -71,7 +71,7 @@ public class MessageHandlerTest {
         }, soundboardController);
 
         IChannel channel = new MockChannel(GUILD_ID);
-        boolean handled = messageHandler.handleMessage(new MockMessage("!Pete let me be free", channel), channel);
+        boolean handled = messageHandler.handleMessage(new MockMessage("!pete let me be free", channel), channel);
 
         assertFalse(handled);
     }
@@ -123,13 +123,13 @@ public class MessageHandlerTest {
         MessageHandler messageHandler = new MessageHandlerImpl(null, new TextDispatcher() {
             @Override
             public void dispatchText(String message, IChannel chatChannel) {
-                assertTrue(message.contains("!Pete hello"));
+                assertTrue(message.contains("!pete hello"));
 
             }
         }, soundboardController);
 
         IChannel channel = new MockChannel(GUILD_ID);
-        boolean handled = messageHandler.handleMessage(new MockMessage("!help Pete", channel),  channel);
+        boolean handled = messageHandler.handleMessage(new MockMessage("!help pete", channel),  channel);
 
         assertTrue(handled);
     }
@@ -215,7 +215,7 @@ public class MessageHandlerTest {
         }, soundboardController);
 
         IChannel channel = new MockChannel(GUILD_ID);
-        boolean handled = messageHandler.handleMessage(new MockMessage("!create soundboard Pete", channel), channel);
+        boolean handled = messageHandler.handleMessage(new MockMessage("!create soundboard pete", channel), channel);
 
         assertTrue(results[0]);
         assertTrue(results[1]);
@@ -236,9 +236,9 @@ public class MessageHandlerTest {
         IChannel channel = new MockChannel(GUILD_ID);
 
         IMessage.Attachment attachment = new IMessage.Attachment("test_sound", 1000, null, "https://s3.amazonaws.com/soundboard-app/extra/test_sound.mp3");
-        boolean handled = messageHandler.handleMessage(new MockMessage("!add Pete test_sound", channel, attachment), channel);
+        boolean handled = messageHandler.handleMessage(new MockMessage("!add pete test_sound", channel, attachment), channel);
 
-        boolean existsInDatabase = databaseProvider.soundClipExists(GUILD_ID, "Pete", "test_sound");
+        boolean existsInDatabase = databaseProvider.soundClipExists(GUILD_ID, "pete", "test_sound");
         assertTrue(existsInDatabase);
 
         assertTrue(results[0]);
@@ -262,9 +262,9 @@ public class MessageHandlerTest {
         IChannel channel = new MockChannel(GUILD_ID);
 
         IMessage.Attachment attachment = new IMessage.Attachment("test_sound", 1000, null, "https://s3.amazonaws.com/soundboard-app/extra/test_sound.mp3");
-        boolean handled = messageHandler.handleMessage(new MockMessage("!add Pete test sound with space", channel, attachment), channel);
+        boolean handled = messageHandler.handleMessage(new MockMessage("!add pete test sound with space", channel, attachment), channel);
 
-        boolean existsInDatabase = databaseProvider.soundClipExists(GUILD_ID, "Pete", "test sound with space");
+        boolean existsInDatabase = databaseProvider.soundClipExists(GUILD_ID, "pete", "test sound with space");
         assertTrue(existsInDatabase);
 
         assertTrue(results[0]);

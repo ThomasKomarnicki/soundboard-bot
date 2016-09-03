@@ -105,7 +105,7 @@ public class SoundboardsController implements SoundboardController {
 
     @Override
     public void initGuild(String guildId) {
-        GuildOptions guildOptions = getOrCreateGuildOptions(guildId);
+        GuildOptions guildOptions = getGuildOptions(guildId);
         guilds.put(guildId, guildOptions);
     }
 
@@ -118,7 +118,10 @@ public class SoundboardsController implements SoundboardController {
             // if soundboard already exists, throw exception
             throw new SoundboardAlreadyExistsException(soundboardName);
         }else{
-            dataProvider.createSoundboard(guildOptions, soundboardName);
+
+            soundBoard = dataProvider.createSoundboard(guildOptions, soundboardName);
+            guildOptions.putSoundboard(soundBoard);
+
         }
     }
 
@@ -137,7 +140,7 @@ public class SoundboardsController implements SoundboardController {
 
     @Override
     public boolean matchesPermissions(String guildId, List<String> userRoles) {
-        GuildOptions guildOptions = getOrCreateGuildOptions(guildId);
+        GuildOptions guildOptions = getGuildOptions(guildId);
         return guildOptions.matchesRoles(userRoles);
     }
 

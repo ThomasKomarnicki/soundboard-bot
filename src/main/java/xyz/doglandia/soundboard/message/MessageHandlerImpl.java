@@ -134,6 +134,8 @@ public class MessageHandlerImpl implements MessageHandler {
             e.printStackTrace();
         }
 
+        textDispatcher.dispatchText("there was a problem adding the clip *"+clipName+"* to soundboard *"+soundboardName+"*", message.getChannel());
+
         return false;
     }
 
@@ -147,7 +149,8 @@ public class MessageHandlerImpl implements MessageHandler {
 
             if (soundboardController.soundClipExists(guildId, soundboardName, clipName)) {
                 SoundClip soundClip = soundboardController.getSoundClip(guildId, soundboardName, clipName);
-                audioDispatcher.playAudioClip(message, soundClip.getUrl());
+                String url = soundClip.getUrl();
+                audioDispatcher.playAudioClip(message, url);
                 return true;
             }else{
                 textDispatcher.dispatchText("sound clip *" + clipName + "* was not found for soundboard *"+soundboardName+"*", message.getChannel());

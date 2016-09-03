@@ -26,7 +26,7 @@ public class DatabaseProviderTest {
 
 //        GuildOptions guildOptions = createTestOptions();
 
-        databaseProvider.createGuildOptions("test_guild_id_3");
+        databaseProvider.createGuildOptions("test_guild_id_1");
 
     }
 
@@ -56,9 +56,9 @@ public class DatabaseProviderTest {
     @Test
     public void testQueryGuild(){
 
-        GuildOptions guildOptions = databaseProvider.getGuildOptionsByGuildId("test_guild_id_2");
+        GuildOptions guildOptions = databaseProvider.getGuildOptionsByGuildId("test_guild_id_1");
         assertTrue(guildOptions != null);
-        assertEquals(guildOptions.getGuildId(), "test_guild_id_2");
+        assertEquals(guildOptions.getGuildId(), "test_guild_id_1");
 
 //        assertNotNull(guildOptions.getSoundBoards());
 //        assertTrue(guildOptions.getSoundBoards().size() > 0);
@@ -72,7 +72,7 @@ public class DatabaseProviderTest {
 
     @Test
     public void testCreateDeleteSoundboard(){
-        GuildOptions guildOptions = databaseProvider.getGuildOptionsByGuildId("test_guild_id_2");
+        GuildOptions guildOptions = databaseProvider.getGuildOptionsByGuildId("test_guild_id_1");
 
         SoundBoard soundBoard = databaseProvider.createSoundboard(guildOptions, "testsoundboard1");
 
@@ -87,7 +87,7 @@ public class DatabaseProviderTest {
 
     @Test
     public void testCreateDeleteSoundClip(){
-        GuildOptions guildOptions = databaseProvider.getGuildOptionsByGuildId("test_guild_id_2");
+        GuildOptions guildOptions = databaseProvider.getGuildOptionsByGuildId("test_guild_id_1");
 
         SoundBoard soundBoard = guildOptions.getSoundboard("Pete");
 
@@ -104,7 +104,7 @@ public class DatabaseProviderTest {
 
     private static GuildOptions createTestOptions(){
         GuildOptions guildOptions = new GuildOptions();
-        guildOptions.setGuildId("test_guild_id_2");
+        guildOptions.setGuildId("test_guild_id_1");
 
         List<String> roles = new ArrayList<>();
         roles.add("TestRole1");
