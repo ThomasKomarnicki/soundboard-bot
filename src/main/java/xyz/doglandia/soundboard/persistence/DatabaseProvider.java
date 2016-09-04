@@ -1,20 +1,16 @@
 package xyz.doglandia.soundboard.persistence;
 
 import org.apache.commons.io.FilenameUtils;
+import xyz.doglandia.soundboard.BotEnvironment;
 import xyz.doglandia.soundboard.model.guild.GuildOptions;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 import xyz.doglandia.soundboard.persistence.database.QueryBuilder;
 import xyz.doglandia.soundboard.persistence.database.QueryResultParser;
-import xyz.doglandia.soundboard.util.Constants;
-import xyz.doglandia.soundboard.util.Sensitive;
 
 import java.io.File;
 import java.sql.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 
 /**
@@ -59,10 +55,11 @@ public class DatabaseProvider implements DataProvider {
             e.printStackTrace();
         }
 
-        String url = "jdbc:postgresql://ec2-52-43-81-161.us-west-2.compute.amazonaws.com:5432/"+databaseName;
+        String url = BotEnvironment.getInstance().getDatabaseConnection()+databaseName;
         Properties props = new Properties();
-        props.setProperty("user","postgres");
-        props.setProperty("password", Sensitive.DB_PASSWORD);
+        String[] creds = BotEnvironment.getInstance().getDatabaseCreds();
+        props.setProperty("user",creds[0]);
+        props.setProperty("password", creds[1]);
         try {
             connection = DriverManager.getConnection(url, props);
         } catch (SQLException e) {
@@ -228,7 +225,7 @@ public class DatabaseProvider implements DataProvider {
 
     private String createFileKey(SoundBoard soundBoard, String name, File file){
         String ext = FilenameUtils.getExtension(file.getName());
-        return Constants.ENVIRONMENT_NAME +"/"+soundBoard.getGuildOptions().getGuildId()+"/"+soundBoard.getNameAsKey()+"/"+name+"."+ext;
+        return BotEnvironment.getInstance().getS3BucketDivision() +"/"+soundBoard.getGuildOptions().getGuildId()+"/"+soundBoard.getNameAsKey()+"/"+name+"."+ext;
     }
 
 }

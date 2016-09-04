@@ -1,0 +1,43 @@
+// install dependencies
+
+1) sudo yum install postgresql postgresql-server postgresql-devel postgresql-contrib postgresql-docs
+
+2) sudo yum install java-1.8.0
+   sudo yum remove java-1.7.0-openjdk
+
+3) sudo service postgresql initdb
+
+4) sudo vim /var/lib/pgsql9/data/pg_hba.conf  :
+
+	# "local" is for Unix domain socket connections only
+	local   all             all                                     trust
+	# IPv4 local connections:
+	host    all             all             0.0.0.0/0               md5
+	# IPv6 local connections:
+	host    all             all             ::1/128                 md5
+
+5) sudo vim /var/lib/pgsql/data/postgresql.conf
+
+# - Connection Settings -
+
+listen_addresses = '*'          # what IP address(es) to listen on;
+
+6) psql -U postgres
+
+   postgres=# ALTER USER postgres WITH PASSWORD 'password';
+   postgres=# \q
+
+7) sudo vim /etc/init.d/bot-service
+	C:\Users\tdk10\Documents\Programming\SoundboardBot\SoundboardService.sh
+	
+8) sudo chmod +x /etc/init.d/bot-service
+
+9) sudo mkdir /usr/local/SoundboardBot
+
+10) sudo chmod 777 /usr/local/SoundboardBot
+
+
+// start postgres and app services
+sudo service postgresql start
+sudo service bot-service start
+
