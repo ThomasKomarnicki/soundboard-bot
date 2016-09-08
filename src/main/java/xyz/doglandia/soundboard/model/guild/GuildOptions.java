@@ -19,6 +19,8 @@ public class GuildOptions {
 
     private String guildId;
 
+    private String lastConnectedChannelId;
+
     private HashMap<String, SoundBoard> soundBoards;
 
     public GuildOptions(){
@@ -83,4 +85,11 @@ public class GuildOptions {
     }
 
 
+    public String getLastConnectedChannelId() {
+        return lastConnectedChannelId;
+    }
+
+    public void setLastConnectedChannelId(String lastConnectedChannelId) {
+        this.lastConnectedChannelId = lastConnectedChannelId;
+    }
 }

@@ -144,6 +144,11 @@ public class SoundboardsController implements SoundboardController {
         return guildOptions.matchesRoles(userRoles);
     }
 
+    @Override
+    public DataProvider getDataProvider() {
+        return dataProvider;
+    }
+
 
     private GuildOptions getGuildOptions(String guildId){
         if(guilds.containsKey(guildId)){

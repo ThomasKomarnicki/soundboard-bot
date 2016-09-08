@@ -9,6 +9,7 @@ import xyz.doglandia.soundboard.audio.management.SoundboardController;
 import xyz.doglandia.soundboard.exception.InvalidAudioClipException;
 import xyz.doglandia.soundboard.exception.SoundboardAlreadyExistsException;
 import xyz.doglandia.soundboard.exception.SoundboardExistException;
+import xyz.doglandia.soundboard.model.guild.GuildOptions;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 import xyz.doglandia.soundboard.text.TextDispatcher;
@@ -97,6 +98,14 @@ public class MessageHandlerImpl implements MessageHandler {
         List<String> roleNames = roles.stream().map(IRole::getName).collect(Collectors.toList());
 
         soundboardController.setGuildPrivilegedRoles(guild.getID(), roleNames);
+    }
+
+    @Override
+    public void handleVoiceChannelJoined(IVoiceChannel channel) {
+        // todo do not like the fact that data provider is exposed to update the last connected voice channel
+        GuildOptions guildOptions = soundboardController.getDataProvider().getGuildOptionsByGuildId(channel.getGuild().getID());
+        guildOptions.setLastConnectedChannelId(channel.getID());
+        soundboardController.getDataProvider().updateGuildOptions(guildOptions);
     }
 
     private boolean createSoundboard(IMessage message, String soundboardName){

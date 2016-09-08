@@ -29,7 +29,7 @@ public class SoundboardBot {
 //        SoundboardDataCreator soundboardDataCreator = new SoundboardFilesDataCreator(new File("soundboards/"));
         SoundboardController soundboardController = new SoundboardsController();
 
-        DiscordEventListener eventListener = new DiscordEventListener(new MessageHandlerImpl(new DiscordAudioDispatcher(), new DiscordTextDispatcher(), soundboardController));
+        DiscordEventListener eventListener = new DiscordEventListener(client, new MessageHandlerImpl(new DiscordAudioDispatcher(), new DiscordTextDispatcher(), soundboardController));
         client.getDispatcher().registerListener(eventListener);
 
 

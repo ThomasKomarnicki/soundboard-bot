@@ -7,6 +7,7 @@ import xyz.doglandia.soundboard.exception.SoundboardExistException;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 import xyz.doglandia.soundboard.model.soundboard.SoundboardMeta;
+import xyz.doglandia.soundboard.persistence.DataProvider;
 
 import java.io.*;
 import java.util.List;
@@ -139,5 +140,10 @@ public class SoundboardSoundManager implements SoundboardController {
     @Override
     public boolean matchesPermissions(String guildId, List<String> userRoles) {
         return false;
+    }
+
+    @Override
+    public DataProvider getDataProvider() {
+        return null;
     }
 }

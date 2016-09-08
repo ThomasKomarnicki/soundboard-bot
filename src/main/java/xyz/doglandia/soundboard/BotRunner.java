@@ -1,7 +1,5 @@
 package xyz.doglandia.soundboard;
 
-import xyz.doglandia.soundboard.util.Sensitive;
-
 /**
  * Created by tdk10 on 7/16/2016.
  */
@@ -16,6 +14,6 @@ public class BotRunner {
 
         BotEnvironment.init(env);
 
-        SoundboardBot bot = new SoundboardBot(Sensitive.TOKEN);
+        SoundboardBot bot = new SoundboardBot(BotEnvironment.getInstance().getToken());
     }
 }

@@ -1,4 +1,5 @@
 import org.junit.Test;
+import xyz.doglandia.soundboard.BotEnvironment;
 import xyz.doglandia.soundboard.model.guild.GuildOptions;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.persistence.DatabaseProvider;
@@ -26,7 +27,9 @@ public class DatabaseProviderTest {
 
 //        GuildOptions guildOptions = createTestOptions();
 
+        BotEnvironment.init("dev");
         databaseProvider.createGuildOptions("test_guild_id_1");
+
 
     }
 

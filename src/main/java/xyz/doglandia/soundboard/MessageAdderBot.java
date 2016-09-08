@@ -9,7 +9,6 @@ import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 import xyz.doglandia.soundboard.util.Sensitive;
-import xyz.doglandia.soundboard.stats.ChannelStatistics;
 
 /**
  * Created by tdk10 on 7/31/2016.
@@ -19,7 +18,7 @@ public class MessageAdderBot {
     public static void main(String[] args){
 
         try {
-            IDiscordClient client = new ClientBuilder().withToken(Sensitive.TOKEN).login();
+            IDiscordClient client = new ClientBuilder().withToken(Sensitive.PROD_TOKEN).login();
             client.getDispatcher().registerListener(new IListener<GuildCreateEvent>() {
                 @Override
                 public void handle(GuildCreateEvent event) {

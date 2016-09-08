@@ -1,6 +1,8 @@
 package xyz.doglandia.soundboard.discord;
 
+import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.obj.IRole;
+import sx.blah.discord.util.DiscordException;
 import xyz.doglandia.soundboard.message.MessageHandler;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.*;
@@ -14,9 +16,11 @@ import java.util.List;
 public class DiscordEventListener {
 
     private MessageHandler messageHandler;
+    private IDiscordClient client;
 
-    public DiscordEventListener(MessageHandler messageHandler){
+    public DiscordEventListener(IDiscordClient client, MessageHandler messageHandler){
         this.messageHandler = messageHandler;
+        this.client = client;
     }
 
 
@@ -28,19 +32,9 @@ public class DiscordEventListener {
 
     @EventSubscriber
     public void onGuildCreated(GuildCreateEvent event){
-//        guild = event.getGuild();
-//        messageListener.onGuildConnected(event.getGuild());
 
-//        try {
-//            event.getGuild().getVoiceChannelsByName("General").get(0).join();
-//        } catch (MissingPermissionsException e) {
-//            e.printStackTrace();
-//        }
 
         messageHandler.handleGuildCreated(event.getGuild());
-
-
-
     }
 
     @EventSubscriber
@@ -65,5 +59,13 @@ public class DiscordEventListener {
             List<IRole> roles = event.getNewRoles();
             messageHandler.handleBotRolesChanged(event.getGuild(), roles);
         }
+    }
+
+    public void onVoiceChannelConnected(UserVoiceChannelJoinEvent event){
+        if(event.getUser().getID().equals(client.getOurUser())){
+            messageHandler.handleVoiceChannelJoined(event.getChannel());
+        }
+
+
     }
 }

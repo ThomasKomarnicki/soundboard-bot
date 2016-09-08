@@ -14,6 +14,7 @@ import java.util.Arrays;
 public class QueryResultParser {
 
     private static final String PRIVILEGED_ROLES = "privileged_roles";
+    private static final String LAST_CONNECTED_CHANNEL_ID = "last_connected_channel_id";
 
     public QueryResultParser(){
 
@@ -45,6 +46,7 @@ public class QueryResultParser {
                     String[] privilegedRoles = (String[]) resultSet.getArray(PRIVILEGED_ROLES).getArray();
 
                     guildOptions.setRolesThatCanAddClips(Arrays.asList(privilegedRoles));
+                    guildOptions.setLastConnectedChannelId(resultSet.getString(LAST_CONNECTED_CHANNEL_ID));
                 }
 
             }

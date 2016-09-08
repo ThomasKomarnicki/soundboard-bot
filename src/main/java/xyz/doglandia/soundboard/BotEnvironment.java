@@ -7,13 +7,16 @@ import xyz.doglandia.soundboard.util.Sensitive;
  */
 public class BotEnvironment {
 
-    private static final String STAGING_DATABASE_CONNECTION = "jdbc:postgresql://ec2-52-43-81-161.us-west-2.compute.amazonaws.com:5432/";
+    private static final String STAGING_DATABASE_CONNECTION = "jdbc:postgresql://ec2-52-42-10-94.us-west-2.compute.amazonaws.com:5432/";
     private static final String PROD_DATABASE_CONNECTION = "jdbc:postgresql://ec2-52-41-77-215.us-west-2.compute.amazonaws.com:5432/";
     private static final String DEV_DATABASE_CONNECTION = STAGING_DATABASE_CONNECTION;
 
     private static final String STAGING_S3_FOLDER = "staging";
     private static final String PROD_S3_FOLDER = "production";
     private static final String DEV_S3_FOLDER = STAGING_S3_FOLDER;
+
+    private static final String STAGING_BOT_TOKEN = Sensitive.STAGING_TOKEN;
+    private static final String PROD_BOT_TOKEN = Sensitive.PROD_TOKEN;
 
     private static BotEnvironment instance;
 
@@ -65,6 +68,16 @@ public class BotEnvironment {
             return STAGING_S3_FOLDER;
         }else{
             return DEV_S3_FOLDER;
+        }
+    }
+
+    public String getToken() {
+        if(env == Env.Production){
+            return PROD_BOT_TOKEN;
+        }else if(env == Env.Staging){
+            return STAGING_BOT_TOKEN;
+        }else{
+            return STAGING_BOT_TOKEN;
         }
     }
 

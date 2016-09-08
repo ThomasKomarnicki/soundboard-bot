@@ -5,6 +5,7 @@ import xyz.doglandia.soundboard.exception.SoundboardAlreadyExistsException;
 import xyz.doglandia.soundboard.exception.SoundboardExistException;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
+import xyz.doglandia.soundboard.persistence.DataProvider;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,4 +34,6 @@ public interface SoundboardController {
     void quit();
 
     boolean matchesPermissions(String guildId, List<String> userRoles);
+
+    public DataProvider getDataProvider();
 }

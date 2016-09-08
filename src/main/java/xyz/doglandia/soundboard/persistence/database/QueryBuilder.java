@@ -25,7 +25,7 @@ public class QueryBuilder {
         StringBuilder stringBuilder = new StringBuilder();
         String whereClause = " WHERE guild_id = '"+guildOptions.getGuildId()+"'";
 
-        stringBuilder.append("UPDATE guild_opts SET privileged_roles = "+ SqlUtil.stringListToValue(guildOptions.getRolesThatCanAddClips()));
+        stringBuilder.append("UPDATE guild_opts SET privileged_roles = "+ SqlUtil.stringListToValue(guildOptions.getRolesThatCanAddClips()) + ", last_connected_channel_id = '"+guildOptions.getLastConnectedChannelId()+"' ");
         stringBuilder.append(whereClause);
         stringBuilder.append(";");
 
@@ -34,7 +34,7 @@ public class QueryBuilder {
 
     public String getGuildOptions(String guildId) {
         return "SELECT " +
-        "guild_opts.guild_id, guild_opts._id, guild_opts.privileged_roles, soundboards._id as soundboard_id, " +
+        "guild_opts.guild_id, guild_opts._id, guild_opts.privileged_roles, guild_opts.last_channel_connected_id, soundboards._id as soundboard_id, " +
         "soundboards.name as soundboard_name, soundboards.display_name as soundboard_display_name, sound_clips.clip_url, sound_clips._id as sound_clip_id, " +
         "sound_clips.name as sound_clip_name " +
                 "FROM " +

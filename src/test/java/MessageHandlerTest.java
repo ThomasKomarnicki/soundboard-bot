@@ -1,5 +1,6 @@
 import mock.MockAudioDispatcher;
 import org.junit.After;
+import xyz.doglandia.soundboard.BotEnvironment;
 import xyz.doglandia.soundboard.audio.management.SoundboardController;
 import xyz.doglandia.soundboard.audio.management.SoundboardsController;
 import xyz.doglandia.soundboard.message.HelpMessageResponder;
@@ -31,6 +32,8 @@ public class MessageHandlerTest {
         soundboardController = new SoundboardsController();
 
         databaseProvider = DatabaseProvider.instantiate();
+
+        BotEnvironment.init("dev");
     }
 
 

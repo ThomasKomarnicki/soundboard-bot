@@ -1,9 +1,6 @@
 package xyz.doglandia.soundboard.message;
 
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IRole;
+import sx.blah.discord.handle.obj.*;
 
 import java.util.List;
 
@@ -45,4 +42,6 @@ public interface MessageHandler {
     void handleGuildCreated(IGuild guild);
 
     void handleBotRolesChanged(IGuild guild, List<IRole> roles);
+
+    void handleVoiceChannelJoined(IVoiceChannel channel);
 }
