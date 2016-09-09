@@ -90,6 +90,27 @@ public class MessageHandlerImpl implements MessageHandler {
     @Override
     public void handleGuildCreated(IGuild guild) {
         soundboardController.initGuild(guild.getID());
+
+        GuildOptions guildOptions = soundboardController.getDataProvider().getGuildOptionsByGuildId(guild.getID());
+        String lastConnectedId = guildOptions.getLastConnectedChannelId();
+        IVoiceChannel voiceChannel = null;
+        if(lastConnectedId != null){
+            // find voice channel
+            voiceChannel = guild.getVoiceChannelByID(lastConnectedId);
+        }
+        if(voiceChannel == null) {
+            if (guild.getVoiceChannels().size() > 0) {
+                voiceChannel = guild.getVoiceChannels().get(0);
+            }
+        }
+        if(voiceChannel != null){
+            try {
+                voiceChannel.join();
+            } catch (MissingPermissionsException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @Override

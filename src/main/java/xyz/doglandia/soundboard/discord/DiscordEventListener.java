@@ -61,11 +61,19 @@ public class DiscordEventListener {
         }
     }
 
+    @EventSubscriber
     public void onVoiceChannelConnected(UserVoiceChannelJoinEvent event){
-        if(event.getUser().getID().equals(client.getOurUser())){
+        if(event.getUser().getID().equals(client.getOurUser().getID())){
             messageHandler.handleVoiceChannelJoined(event.getChannel());
         }
 
+    }
 
+    @EventSubscriber
+    public void onVoiceChannelChanged(UserVoiceChannelMoveEvent event){
+
+        if(event.getUser().getID().equals(client.getOurUser().getID())){
+            messageHandler.handleVoiceChannelJoined(event.getNewChannel());
+        }
     }
 }
