@@ -1,4 +1,4 @@
-package xyz.doglandia.soundboard.audio.management;
+package xyz.doglandia.soundboard.data;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -19,13 +19,13 @@ import java.util.List;
 /**
  * controls interaction between DataProvider and Soundboard app
  */
-public class SoundboardsController implements SoundboardController {
+public class SoundboardDataController implements DataController {
 
     private DataProvider dataProvider;
 
     private HashMap<String, GuildOptions> guilds;
 
-    public SoundboardsController(){
+    public SoundboardDataController(){
         dataProvider = DatabaseProvider.instantiate(); // uses database provider and s3 file manager
         guilds = new HashMap<>();
     }
@@ -145,10 +145,9 @@ public class SoundboardsController implements SoundboardController {
     }
 
     @Override
-    public DataProvider getDataProvider() {
-        return dataProvider;
+    public GuildOptions getGuildOptionsById(String guildId) {
+        return getGuildOptions(guildId);
     }
-
 
     private GuildOptions getGuildOptions(String guildId){
         if(guilds.containsKey(guildId)){

@@ -1,8 +1,9 @@
-package xyz.doglandia.soundboard.audio.management;
+package xyz.doglandia.soundboard.data;
 
 import xyz.doglandia.soundboard.exception.InvalidAudioClipException;
 import xyz.doglandia.soundboard.exception.SoundboardAlreadyExistsException;
 import xyz.doglandia.soundboard.exception.SoundboardExistException;
+import xyz.doglandia.soundboard.model.guild.GuildOptions;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 import xyz.doglandia.soundboard.persistence.DataProvider;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * Created by tdk10 on 7/16/2016.
  */
-public interface SoundboardController {
+public interface DataController {
 
     boolean soundClipExists(String guildId, String soundboardName, String clipParam);
 
@@ -35,5 +36,7 @@ public interface SoundboardController {
 
     boolean matchesPermissions(String guildId, List<String> userRoles);
 
-    public DataProvider getDataProvider();
+    GuildOptions getGuildOptionsById(String guildId);
+
+    void updateGuildOptions(GuildOptions guildOptions);
 }

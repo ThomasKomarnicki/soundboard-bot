@@ -2,9 +2,8 @@ import mock.MockGuild;
 import mock.MockRole;
 import org.junit.Test;
 import sx.blah.discord.handle.obj.IRole;
-import sx.blah.discord.handle.obj.IUser;
-import xyz.doglandia.soundboard.audio.management.SoundboardController;
-import xyz.doglandia.soundboard.audio.management.SoundboardsController;
+import xyz.doglandia.soundboard.data.DataController;
+import xyz.doglandia.soundboard.data.SoundboardDataController;
 import xyz.doglandia.soundboard.message.MessageHandler;
 import xyz.doglandia.soundboard.message.MessageHandlerImpl;
 import xyz.doglandia.soundboard.util.Util;
@@ -22,9 +21,9 @@ public class GuildRolesTest {
     @Test
     public void testRoleChange(){
 
-        SoundboardController soundboardController = new SoundboardsController();
+        DataController dataController = new SoundboardDataController();
 
-        MessageHandler messageHandler = new MessageHandlerImpl(null, null, soundboardController);
+        MessageHandler messageHandler = new MessageHandlerImpl(null, null, dataController);
 
         List<IRole> roles = new ArrayList<>();
         roles.add(new MockRole("test_role_1"));
@@ -34,7 +33,7 @@ public class GuildRolesTest {
 
         List<String> userRoles = Util.ListRoleNames(roles);
 
-        assertTrue(soundboardController.matchesPermissions(MessageHandlerTest.GUILD_ID, userRoles));
+        assertTrue(dataController.matchesPermissions(MessageHandlerTest.GUILD_ID, userRoles));
 
 
 

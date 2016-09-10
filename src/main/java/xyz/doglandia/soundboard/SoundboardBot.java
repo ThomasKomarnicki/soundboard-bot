@@ -1,7 +1,8 @@
 package xyz.doglandia.soundboard;
 
 import xyz.doglandia.soundboard.audio.DiscordAudioDispatcher;
-import xyz.doglandia.soundboard.audio.management.*;
+import xyz.doglandia.soundboard.data.DataController;
+import xyz.doglandia.soundboard.data.SoundboardDataController;
 import xyz.doglandia.soundboard.discord.DiscordEventListener;
 import xyz.doglandia.soundboard.message.MessageHandlerImpl;
 import sx.blah.discord.api.ClientBuilder;
@@ -27,9 +28,9 @@ public class SoundboardBot {
         }
 
 //        SoundboardDataCreator soundboardDataCreator = new SoundboardFilesDataCreator(new File("soundboards/"));
-        SoundboardController soundboardController = new SoundboardsController();
+        DataController dataController = new SoundboardDataController();
 
-        DiscordEventListener eventListener = new DiscordEventListener(client, new MessageHandlerImpl(new DiscordAudioDispatcher(), new DiscordTextDispatcher(), soundboardController));
+        DiscordEventListener eventListener = new DiscordEventListener(client, new MessageHandlerImpl(new DiscordAudioDispatcher(), new DiscordTextDispatcher(), dataController));
         client.getDispatcher().registerListener(eventListener);
 
 

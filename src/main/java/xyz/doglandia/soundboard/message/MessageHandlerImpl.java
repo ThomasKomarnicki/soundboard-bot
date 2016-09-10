@@ -1,11 +1,9 @@
 package xyz.doglandia.soundboard.message;
 
 import sx.blah.discord.handle.obj.*;
-import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
 import xyz.doglandia.soundboard.audio.AudioDispatcher;
-import xyz.doglandia.soundboard.audio.management.SoundboardController;
+import xyz.doglandia.soundboard.data.DataController;
 import xyz.doglandia.soundboard.exception.InvalidAudioClipException;
 import xyz.doglandia.soundboard.exception.SoundboardAlreadyExistsException;
 import xyz.doglandia.soundboard.exception.SoundboardExistException;
@@ -16,8 +14,6 @@ import xyz.doglandia.soundboard.text.TextDispatcher;
 import xyz.doglandia.soundboard.util.Util;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,14 +27,14 @@ public class MessageHandlerImpl implements MessageHandler {
 
     AudioDispatcher audioDispatcher;
     TextDispatcher textDispatcher;
-    SoundboardController soundboardController;
+    DataController dataController;
 
     MessageSessionController messageSessionController;
 
-    public MessageHandlerImpl(AudioDispatcher audioDispatcher, TextDispatcher textDispatcher, SoundboardController soundboardController){
+    public MessageHandlerImpl(AudioDispatcher audioDispatcher, TextDispatcher textDispatcher, DataController dataController){
         this.textDispatcher = textDispatcher;
         this.audioDispatcher = audioDispatcher;
-        this.soundboardController = soundboardController;
+        this.dataController = dataController;
 
         messageSessionController = new MessageSessionController();
     }
@@ -89,9 +85,9 @@ public class MessageHandlerImpl implements MessageHandler {
 
     @Override
     public void handleGuildCreated(IGuild guild) {
-        soundboardController.initGuild(guild.getID());
+        dataController.initGuild(guild.getID());
 
-        GuildOptions guildOptions = soundboardController.getDataProvider().getGuildOptionsByGuildId(guild.getID());
+        GuildOptions guildOptions = dataController.getGuildOptionsById(guild.getID());
         String lastConnectedId = guildOptions.getLastConnectedChannelId();
         IVoiceChannel voiceChannel = null;
         if(lastConnectedId != null){
@@ -118,21 +114,21 @@ public class MessageHandlerImpl implements MessageHandler {
 
         List<String> roleNames = roles.stream().map(IRole::getName).collect(Collectors.toList());
 
-        soundboardController.setGuildPrivilegedRoles(guild.getID(), roleNames);
+        dataController.setGuildPrivilegedRoles(guild.getID(), roleNames);
     }
 
     @Override
     public void handleVoiceChannelJoined(IVoiceChannel channel) {
         // todo do not like the fact that data provider is exposed to update the last connected voice channel
-        GuildOptions guildOptions = soundboardController.getDataProvider().getGuildOptionsByGuildId(channel.getGuild().getID());
+        GuildOptions guildOptions = dataController.getGuildOptionsById(channel.getGuild().getID());
         guildOptions.setLastConnectedChannelId(channel.getID());
-        soundboardController.getDataProvider().updateGuildOptions(guildOptions);
+        dataController.updateGuildOptions(guildOptions);
     }
 
     private boolean createSoundboard(IMessage message, String soundboardName){
 
         try {
-            soundboardController.createSoundboard(Util.getGuildFromUserMessage(message).getID(), soundboardName);
+            dataController.createSoundboard(Util.getGuildFromUserMessage(message).getID(), soundboardName);
             // todo do feedback here
             textDispatcher.dispatchText("soundboard \""+soundboardName+"\" created! Type: \n*!"+soundboardName+" help* \nto get started", message.getChannel());
             return true;
@@ -153,7 +149,7 @@ public class MessageHandlerImpl implements MessageHandler {
     private boolean addClip(IMessage message, String soundboardName, String clipName, String clipUrl){
         String guildId = Util.getGuildFromUserMessage(message).getID();
         try {
-            soundboardController.saveSoundFileToSoundboard(guildId, clipUrl, soundboardName, clipName);
+            dataController.saveSoundFileToSoundboard(guildId, clipUrl, soundboardName, clipName);
             textDispatcher.dispatchText("Clip added! *!"+soundboardName+" "+clipName+"*", message.getChannel());
             return true;
         } catch (SoundboardExistException e) {
@@ -175,10 +171,10 @@ public class MessageHandlerImpl implements MessageHandler {
 
         String guildId = Util.getGuildFromUserMessage(message).getID();
 
-        if(soundboardController.soundBoardExists(guildId, soundboardName)) {
+        if(dataController.soundBoardExists(guildId, soundboardName)) {
 
-            if (soundboardController.soundClipExists(guildId, soundboardName, clipName)) {
-                SoundClip soundClip = soundboardController.getSoundClip(guildId, soundboardName, clipName);
+            if (dataController.soundClipExists(guildId, soundboardName, clipName)) {
+                SoundClip soundClip = dataController.getSoundClip(guildId, soundboardName, clipName);
                 String url = soundClip.getUrl();
                 audioDispatcher.playAudioClip(message, url);
                 return true;
@@ -204,7 +200,7 @@ public class MessageHandlerImpl implements MessageHandler {
         if(helpParam.equalsIgnoreCase("add")){
             handleAddHelp(message.getChannel());
         }
-        else if(soundboardController.soundBoardExists(guild.getID(), helpParam)) {
+        else if(dataController.soundBoardExists(guild.getID(), helpParam)) {
             handleSoundboardHelp(message, helpParam);
         }else{
             dispatchSoundboardNotFound(helpParam, message.getChannel());
@@ -217,9 +213,9 @@ public class MessageHandlerImpl implements MessageHandler {
     private boolean handleSoundboardHelp(IMessage message, String soundboardName){
         String guildId = Util.getGuildFromUserMessage(message).getID();
 
-        if(soundboardController.soundBoardExists(guildId, soundboardName)) {
+        if(dataController.soundBoardExists(guildId, soundboardName)) {
 
-            SoundBoard soundBoard = soundboardController.getSoundboard(guildId, soundboardName);
+            SoundBoard soundBoard = dataController.getSoundboard(guildId, soundboardName);
             if(soundBoard == null){
                 dispatchSoundboardNotFound(soundboardName, message.getChannel());
                 return false;

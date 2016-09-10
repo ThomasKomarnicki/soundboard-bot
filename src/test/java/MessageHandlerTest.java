@@ -1,8 +1,8 @@
 import mock.MockAudioDispatcher;
 import org.junit.After;
 import xyz.doglandia.soundboard.BotEnvironment;
-import xyz.doglandia.soundboard.audio.management.SoundboardController;
-import xyz.doglandia.soundboard.audio.management.SoundboardsController;
+import xyz.doglandia.soundboard.data.DataController;
+import xyz.doglandia.soundboard.data.SoundboardDataController;
 import xyz.doglandia.soundboard.message.HelpMessageResponder;
 import xyz.doglandia.soundboard.message.MessageHandler;
 import xyz.doglandia.soundboard.message.MessageHandlerImpl;
@@ -23,13 +23,13 @@ public class MessageHandlerTest {
 
     public static final String GUILD_ID = "198587533750304769";
 
-    SoundboardController soundboardController;
+    DataController dataController;
 
     DatabaseProvider databaseProvider;
 
     public MessageHandlerTest(){
 //        soundManager = new SoundboardSoundManager(new SoundboardFilesDataCreator(new File("soundboards/")));
-        soundboardController = new SoundboardsController();
+        dataController = new SoundboardDataController();
 
         databaseProvider = DatabaseProvider.instantiate();
 
@@ -47,7 +47,7 @@ public class MessageHandlerTest {
                 results[0] = url != null;
             }
 
-        }, null, soundboardController);
+        }, null, dataController);
 
         IChannel channel = new MockChannel(GUILD_ID);
         boolean handled = messageHandler.handleMessage(new MockMessage("!pete hello", channel), channel);
@@ -71,7 +71,7 @@ public class MessageHandlerTest {
             public void dispatchText(String message, IChannel chatChannel) {
 
             }
-        }, soundboardController);
+        }, dataController);
 
         IChannel channel = new MockChannel(GUILD_ID);
         boolean handled = messageHandler.handleMessage(new MockMessage("!pete let me be free", channel), channel);
@@ -100,7 +100,7 @@ public class MessageHandlerTest {
 
                 messageCount[0] = messageCount[0] + 1;
             }
-        }, soundboardController);
+        }, dataController);
 
         IChannel channel = new MockChannel(GUILD_ID);
         boolean handled = messageHandler.handleMessage(new MockMessage("!help", channel), channel);
@@ -129,7 +129,7 @@ public class MessageHandlerTest {
                 assertTrue(message.contains("!pete hello"));
 
             }
-        }, soundboardController);
+        }, dataController);
 
         IChannel channel = new MockChannel(GUILD_ID);
         boolean handled = messageHandler.handleMessage(new MockMessage("!help pete", channel),  channel);
@@ -151,7 +151,7 @@ public class MessageHandlerTest {
                 results[0] = message != null;
                 results[1] = message.contains("not found");
             }
-        }, soundboardController);
+        }, dataController);
 
         IChannel channel = new MockChannel(GUILD_ID);
         boolean handled = messageHandler.handleMessage(new MockMessage("!this_soundboard_doesnt_exist dog", channel),  channel);
@@ -174,7 +174,7 @@ public class MessageHandlerTest {
 //                System.out.println(message);
 
             }
-        }, soundboardController);
+        }, dataController);
 
         IChannel channel = new MockChannel(GUILD_ID);
         boolean handled = messageHandler.handleMessage(new MockMessage("!help add", channel), channel);
@@ -194,7 +194,7 @@ public class MessageHandlerTest {
                 results[1] = message.contains("soundboard \"TestBoard\" created! Type:");
 
             }
-        }, soundboardController);
+        }, dataController);
 
         IChannel channel = new MockChannel(GUILD_ID);
         boolean handled = messageHandler.handleMessage(new MockMessage("!create soundboard TestBoard", channel), channel);
@@ -215,7 +215,7 @@ public class MessageHandlerTest {
                 results[1] = message.contains("already exists");
 
             }
-        }, soundboardController);
+        }, dataController);
 
         IChannel channel = new MockChannel(GUILD_ID);
         boolean handled = messageHandler.handleMessage(new MockMessage("!create soundboard pete", channel), channel);
@@ -234,7 +234,7 @@ public class MessageHandlerTest {
                 results[1] = message.contains("Clip added");
 
             }
-        }, soundboardController);
+        }, dataController);
 
         IChannel channel = new MockChannel(GUILD_ID);
 
@@ -260,7 +260,7 @@ public class MessageHandlerTest {
                 results[1] = message.contains("Clip added");
 
             }
-        }, soundboardController);
+        }, dataController);
 
         IChannel channel = new MockChannel(GUILD_ID);
 
