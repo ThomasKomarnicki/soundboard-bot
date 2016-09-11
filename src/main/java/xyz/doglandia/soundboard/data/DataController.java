@@ -6,9 +6,9 @@ import xyz.doglandia.soundboard.exception.SoundboardExistException;
 import xyz.doglandia.soundboard.model.guild.GuildOptions;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
-import xyz.doglandia.soundboard.persistence.DataProvider;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -39,4 +39,6 @@ public interface DataController {
     GuildOptions getGuildOptionsById(String guildId);
 
     void updateGuildOptions(GuildOptions guildOptions);
+
+    Collection<SoundBoard> getSoundboards(String guildId);
 }

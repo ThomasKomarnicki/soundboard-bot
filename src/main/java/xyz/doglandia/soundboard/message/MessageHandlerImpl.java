@@ -14,6 +14,8 @@ import xyz.doglandia.soundboard.text.TextDispatcher;
 import xyz.doglandia.soundboard.util.Util;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -71,6 +73,9 @@ public class MessageHandlerImpl implements MessageHandler {
             case STOP_AUDIO:
                 audioDispatcher.stopAllAudio(message);
                 break;
+            case LIST_SOUNDBOARD:
+                listSoundboards(chatChannel);
+                break;
         }
 
         return true;
@@ -107,6 +112,28 @@ public class MessageHandlerImpl implements MessageHandler {
             }
         }
 
+        IChannel defaultTextChannel = findDefaultChatChannel(guild);
+        if(defaultTextChannel != null) {
+            textDispatcher.dispatchText(HelpMessageResponder.GET_STARTED, defaultTextChannel);
+        }
+
+    }
+
+    private IChannel findDefaultChatChannel(IGuild guild){
+       List<IChannel> generals = guild.getChannelsByName("General");
+        if(generals != null && generals.size() > 0){
+            return generals.get(0);
+        }
+
+        for(IChannel channel : guild.getChannels()){
+            Map<String, IChannel.PermissionOverride> permissionsMap = channel.getRoleOverrides();
+            EnumSet<Permissions> permissions = channel.getModifiedPermissions(guild.getEveryoneRole());
+            if(permissions.contains(Permissions.SEND_MESSAGES)){
+                return channel;
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -190,7 +217,7 @@ public class MessageHandlerImpl implements MessageHandler {
     private boolean handleHelpRequest(IMessage message, String helpParam){
 
         if(helpParam == null || helpParam.isEmpty()){
-            messageSessionController.startMessageSession(message, new HelpMessageResponder(textDispatcher));
+            messageSessionController.startMessageSession(message, new HelpMessageResponder(textDispatcher,this));
             textDispatcher.dispatchText(HelpMessageResponder.HELP_START, message.getChannel());
             return true;
         }
@@ -269,6 +296,24 @@ public class MessageHandlerImpl implements MessageHandler {
 
     private void dispatchSoundboardNotFound(String soundboardName, IChannel channel){
         textDispatcher.dispatchText("Soundboard *"+soundboardName+"* not found", channel);
+    }
+
+    public void listSoundboards(IChannel channel){
+        Collection<SoundBoard> soundBoards = dataController.getSoundboards(channel.getGuild().getID());
+
+        if(soundBoards == null || soundBoards.size() == 0){
+            textDispatcher.dispatchText("There are no soundboards for the server yet...\n"+HelpMessageResponder.CREATE_SOUNDBOARD_HELP, channel);
+            return;
+        }
+
+        StringBuilder builder = new StringBuilder();
+        for(SoundBoard soundBoard : soundBoards){
+            builder.append("*!");
+            builder.append(soundBoard.getName());
+            builder.append("*");
+            builder.append('\n');
+        }
+        textDispatcher.dispatchText(builder.toString(), channel);
     }
 
     //        if(params.length >= 2){

@@ -13,6 +13,7 @@ import xyz.doglandia.soundboard.persistence.DataProvider;
 import xyz.doglandia.soundboard.persistence.DatabaseProvider;
 
 import java.io.*;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -147,6 +148,17 @@ public class SoundboardDataController implements DataController {
     @Override
     public GuildOptions getGuildOptionsById(String guildId) {
         return getGuildOptions(guildId);
+    }
+
+    @Override
+    public void updateGuildOptions(GuildOptions guildOptions) {
+        dataProvider.updateGuildOptions(guildOptions);
+    }
+
+    @Override
+    public Collection<SoundBoard> getSoundboards(String guildId) {
+        GuildOptions guildOptions = getGuildOptions(guildId);
+        return guildOptions.getAllSoundboards();
     }
 
     private GuildOptions getGuildOptions(String guildId){

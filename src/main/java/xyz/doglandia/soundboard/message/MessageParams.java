@@ -13,7 +13,7 @@ import java.util.Map;
 public class MessageParams {
 
     public enum Type{
-        NONE, ADD_SOUNDBOARD, ADD_CLIP, PLAY_CLIP, HELP, STOP_AUDIO, JOIN_CHANNEL
+        NONE, ADD_SOUNDBOARD, ADD_CLIP, PLAY_CLIP, HELP, STOP_AUDIO, JOIN_CHANNEL, LIST_SOUNDBOARD;
     }
 
     public static class Keys{
@@ -23,6 +23,7 @@ public class MessageParams {
         public static final String CLIP_NAME = "clip_name";
         public static final String CLIP_URL = "clip_url";
         public static final String CHANNEL_NAME = "channel_name";
+//        public static final String LIST_SOUNDBOARD = "list_soundboards";
     }
 
     private Type type;
@@ -88,6 +89,10 @@ public class MessageParams {
             if(messageParams[0].equalsIgnoreCase("!help")){
                 type = Type.HELP;
                 params.put(Keys.TYPE, "help");
+                return;
+            }
+            if(messageParams[0].equalsIgnoreCase("!soundboards")){
+                type = Type.LIST_SOUNDBOARD;
                 return;
             }
         }

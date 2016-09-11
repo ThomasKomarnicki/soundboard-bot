@@ -3,10 +3,7 @@ package xyz.doglandia.soundboard.model.guild;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by tdk10 on 8/7/2016.
@@ -91,5 +88,9 @@ public class GuildOptions {
 
     public void setLastConnectedChannelId(String lastConnectedChannelId) {
         this.lastConnectedChannelId = lastConnectedChannelId;
+    }
+
+    public Collection<SoundBoard> getAllSoundboards(){
+        return soundBoards.values();
     }
 }
