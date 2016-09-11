@@ -29,6 +29,6 @@ To add sound clips to soundboards:
 
 2.  Select the sound file (mp3 or wav) you want to upload
 
-3.  In the "add a comment" text, put **!add <soundboard name\> \<clip name\>**, for example: !add FunnyBoard laugh clip
+3.  In the "add a comment" text, put **!add \<soundboard name\> \<clip name\>**, for example: !add FunnyBoard laugh clip
 
 
