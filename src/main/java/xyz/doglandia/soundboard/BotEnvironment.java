@@ -15,6 +15,10 @@ public class BotEnvironment {
     private static final String PROD_S3_FOLDER = "production";
     private static final String DEV_S3_FOLDER = STAGING_S3_FOLDER;
 
+    private static final String STAGING_TEMP_FILES_DIR ="/usr/local/SoundboardBot/temp";
+    private static final String PROD_TEMP_FILES_DIR = STAGING_TEMP_FILES_DIR;
+    private static final String DEV_TEMP_FILES_DIR ="temp";
+
     private static final String STAGING_BOT_TOKEN = Sensitive.STAGING_TOKEN;
     private static final String PROD_BOT_TOKEN = Sensitive.PROD_TOKEN;
 
@@ -78,6 +82,16 @@ public class BotEnvironment {
             return STAGING_BOT_TOKEN;
         }else{
             return STAGING_BOT_TOKEN;
+        }
+    }
+
+    public String getTempFilesDir(){
+        if(env == Env.Production){
+            return PROD_TEMP_FILES_DIR;
+        }else if(env == Env.Staging){
+            return STAGING_TEMP_FILES_DIR;
+        }else{
+            return DEV_TEMP_FILES_DIR;
         }
     }
 

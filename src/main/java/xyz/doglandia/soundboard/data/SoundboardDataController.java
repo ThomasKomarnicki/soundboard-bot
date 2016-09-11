@@ -3,6 +3,7 @@ package xyz.doglandia.soundboard.data;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import xyz.doglandia.soundboard.BotEnvironment;
 import xyz.doglandia.soundboard.exception.InvalidAudioClipException;
 import xyz.doglandia.soundboard.exception.SoundboardAlreadyExistsException;
 import xyz.doglandia.soundboard.exception.SoundboardExistException;
@@ -89,7 +90,8 @@ public class SoundboardDataController implements DataController {
 
 
 
-        File newClip = new File("temp"+File.separator+soundBoard.getNameAsKey()+"-"+SoundBoard.getNameAsKey(clipName)+".mp3");
+        File newClip = new File(BotEnvironment.getInstance().getTempFilesDir()+File.separator+soundBoard.getNameAsKey()+"-"+SoundBoard.getNameAsKey(clipName)+".mp3");
+        System.out.println("creating file at: "+newClip.getAbsolutePath());
         newClip.createNewFile();
         OutputStream outStream = new FileOutputStream(newClip);
         byte[] buffer = new byte[4096];
@@ -101,6 +103,8 @@ public class SoundboardDataController implements DataController {
 
         SoundClip soundClip = dataProvider.createSoundClip(soundBoard, clipName, newClip);
         soundBoard.addClip(soundClip);
+
+        newClip.delete();
 
     }
 
