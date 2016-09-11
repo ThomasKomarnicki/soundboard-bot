@@ -79,19 +79,25 @@ public class MessageParams {
                 return;
 //                audioDispatcher.stopAllAudio(message);
             }
-            if(messageParams[0].equalsIgnoreCase("!help")){
+            else if(messageParams[0].equalsIgnoreCase("!help")){
                 type = Type.HELP;
                 params.put(Keys.TYPE, "help");
                 return;
             }
-            if(messageParams[0].equalsIgnoreCase("!soundboards")){
+            else if(messageParams[0].equalsIgnoreCase("!soundboards")){
                 type = Type.LIST_SOUNDBOARD;
                 return;
             }
-            if(messageParams[0].equalsIgnoreCase("!join")){
+            else if(messageParams[0].equalsIgnoreCase("!join")){
                 type = Type.JOIN_CHANNEL;
                 return;
+            }else{
+                type = Type.HELP;
+                params.put(Keys.TYPE, "help");
+                params.put(Keys.HELP_PARAM, messageParams[0].substring(1, messageParams[0].length()));
+                return;
             }
+
         }
         type = Type.NONE;
     }
