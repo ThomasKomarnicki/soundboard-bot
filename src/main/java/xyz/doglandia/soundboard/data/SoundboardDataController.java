@@ -105,9 +105,18 @@ public class SoundboardDataController implements DataController {
     }
 
     @Override
-    public void initGuild(String guildId) {
-        GuildOptions guildOptions = getGuildOptions(guildId);
+    public boolean initGuild(String guildId) {
+        GuildOptions guildOptions = dataProvider.getGuildOptionsByGuildId(guildId);
+        boolean newlyCreated = false;
+        if(guildOptions == null){
+            newlyCreated = true;
+            guildOptions = getGuildOptions(guildId);
+
+        }
+
         guilds.put(guildId, guildOptions);
+
+        return newlyCreated;
     }
 
     @Override

@@ -90,7 +90,7 @@ public class MessageHandlerImpl implements MessageHandler {
 
     @Override
     public void handleGuildCreated(IGuild guild) {
-        dataController.initGuild(guild.getID());
+        boolean newlyCreated = dataController.initGuild(guild.getID());
 
         GuildOptions guildOptions = dataController.getGuildOptionsById(guild.getID());
         String lastConnectedId = guildOptions.getLastConnectedChannelId();
@@ -112,9 +112,11 @@ public class MessageHandlerImpl implements MessageHandler {
             }
         }
 
-        IChannel defaultTextChannel = findDefaultChatChannel(guild);
-        if(defaultTextChannel != null) {
-            textDispatcher.dispatchText(HelpMessageResponder.GET_STARTED, defaultTextChannel);
+        if(newlyCreated) {
+            IChannel defaultTextChannel = findDefaultChatChannel(guild);
+            if (defaultTextChannel != null) {
+                textDispatcher.dispatchText(HelpMessageResponder.GET_STARTED, defaultTextChannel);
+            }
         }
 
     }
@@ -276,6 +278,7 @@ public class MessageHandlerImpl implements MessageHandler {
             for(IUser user :voiceChannel.getConnectedUsers()){
                 if(user.getID().equals(message.getAuthor().getID())){
                     try {
+
                         voiceChannel.join();
                         return;
                     } catch (MissingPermissionsException e) {

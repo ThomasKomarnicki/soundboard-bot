@@ -26,7 +26,8 @@ public interface DataController {
 
     void saveSoundFileToSoundboard(String guildId, String url, String soundboardName, String clipName) throws SoundboardExistException, IOException, InvalidAudioClipException;
 
-    void initGuild(String guildId);
+    /* true if brand new */
+    boolean initGuild(String guildId);
 
     void createSoundboard(String guildId, String soundboardName) throws SoundboardAlreadyExistsException;
 
