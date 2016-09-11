@@ -159,7 +159,7 @@ public class MessageHandlerImpl implements MessageHandler {
         try {
             dataController.createSoundboard(Util.getGuildFromUserMessage(message).getID(), soundboardName);
             // todo do feedback here
-            textDispatcher.dispatchText("soundboard \""+soundboardName+"\" created! Type: \n*!"+soundboardName+" help* \nto get started", message.getChannel());
+            textDispatcher.dispatchText("soundboard \""+soundboardName+"\" created! Type: \n*!help "+soundboardName+"* \nto get started", message.getChannel());
             return true;
         } catch (SoundboardAlreadyExistsException e) {
             e.printStackTrace();
