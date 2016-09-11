@@ -68,7 +68,7 @@ public class MessageHandlerImpl implements MessageHandler {
             case HELP:
                 return handleHelpRequest(message, messageParams.getParam(HELP_PARAM));
             case JOIN_CHANNEL:
-                joinChannel(message, messageParams.getParam(CHANNEL_NAME));
+                joinChannel(message);
                 break;
             case STOP_AUDIO:
                 audioDispatcher.stopAllAudio(message);
@@ -267,24 +267,38 @@ public class MessageHandlerImpl implements MessageHandler {
     }
 
 
-    private void joinChannel(IMessage message, String channelName){
+    private void joinChannel(IMessage message){
         IGuild guild = Util.getGuildFromUserMessage(message);
         if(guild == null){
-            textDispatcher.dispatchText("could not join channel *"+channelName+"*", message.getChannel());
+            textDispatcher.dispatchText("could not join channel", message.getChannel());
         }
-        List<IVoiceChannel> voiceChannels = guild.getVoiceChannelsByName(channelName);
-
-        if(voiceChannels != null && voiceChannels.size() > 0){
-            IVoiceChannel voiceChannel = voiceChannels.get(0);
-            if(!voiceChannel.isConnected()) {
-                try {
-                    voiceChannel.join();
-                } catch (MissingPermissionsException e) {
-                    e.printStackTrace();
+        for(IVoiceChannel voiceChannel :guild.getVoiceChannels()){
+            for(IUser user :voiceChannel.getConnectedUsers()){
+                if(user.getID().equals(message.getAuthor().getID())){
+                    try {
+                        voiceChannel.join();
+                        return;
+                    } catch (MissingPermissionsException e) {
+                        e.printStackTrace();
+                    }
                 }
-
             }
         }
+
+        textDispatcher.dispatchText("Could not join your voice channel. Are you connected to a voice channel?",message.getChannel());
+//        List<IVoiceChannel> voiceChannels = guild.getVoiceChannelsByName(channelName);
+//
+//        if(voiceChannels != null && voiceChannels.size() > 0){
+//            IVoiceChannel voiceChannel = voiceChannels.get(0);
+//            if(!voiceChannel.isConnected()) {
+//                try {
+//                    voiceChannel.join();
+//                } catch (MissingPermissionsException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }
     }
 
 

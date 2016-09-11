@@ -72,13 +72,6 @@ public class MessageParams {
                     return;
                 }
 
-            }else{
-                if(messageParams[0].equalsIgnoreCase("join") && messageParams[1].length() > 0){
-                    type = Type.JOIN_CHANNEL;
-                    params.put(Keys.CHANNEL_NAME, Util.stringFromArray(messageParams, 1, messageParams.length));
-                    return;
-//                    handleJoin(message, messageParams);
-                }
             }
         }else if(messageParams.length == 1){
             if(messageParams[0].equalsIgnoreCase("!stop")){
@@ -93,6 +86,10 @@ public class MessageParams {
             }
             if(messageParams[0].equalsIgnoreCase("!soundboards")){
                 type = Type.LIST_SOUNDBOARD;
+                return;
+            }
+            if(messageParams[0].equalsIgnoreCase("!join")){
+                type = Type.JOIN_CHANNEL;
                 return;
             }
         }
