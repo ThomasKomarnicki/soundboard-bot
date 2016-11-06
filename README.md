@@ -1,4 +1,4 @@
-# soundboard-bot
+# SoundboardBot for Discord
 
 This Discord bot lets you create fun soundboards for your server's voice channels. 
 
