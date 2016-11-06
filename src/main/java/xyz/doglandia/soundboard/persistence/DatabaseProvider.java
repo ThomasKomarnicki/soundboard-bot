@@ -11,6 +11,8 @@ import xyz.doglandia.soundboard.persistence.database.QueryResultParser;
 import java.io.File;
 import java.sql.*;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -77,7 +79,17 @@ public class DatabaseProvider implements DataProvider {
             ResultSet resultSet = st.executeQuery(query);
 
             if(resultSet.next()){
-                return queryResultParser.createGuildOptionsFromJoinedResults(resultSet);
+
+                GuildOptions guildOptions = queryResultParser.createGuildOptionsFromJoinedResults(resultSet);
+
+                query = queryBuilder.getGlobalSoundboards();
+                resultSet = st.executeQuery(query);
+                Collection<SoundBoard> globalSoundboards = queryResultParser.createSoundBoardList(resultSet);
+                for(SoundBoard soundBoard : globalSoundboards){
+                    guildOptions.addGlobalSoundboard(soundBoard);
+                }
+
+                return guildOptions;
             }
 
         } catch (SQLException e) {

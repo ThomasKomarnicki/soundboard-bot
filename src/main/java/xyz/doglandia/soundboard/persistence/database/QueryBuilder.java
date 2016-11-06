@@ -13,6 +13,7 @@ public class QueryBuilder {
     private static final String GUILD_OPTS_TABLE = "guild_opts";
     private static final String SOUNDBOARDS_TABLE = "soundboards";
     private static final String SOUND_CLIPS_TABLE = "sound_clips";
+    private static final String GLOBAL = "global";
 
     private String databaseName;
 
@@ -43,6 +44,19 @@ public class QueryBuilder {
         "LEFT JOIN sound_clips ON (sound_clips.soundboard_id = soundboards._id) " +
                 "WHERE " +
         "guild_opts.guild_id = '" + guildId +"';";
+    }
+
+    public String getGlobalSoundboards(){
+        return "SELECT " +
+                "soundboards._id as soundboard_id, " +
+                "soundboards.name as soundboard_name, soundboards.display_name as soundboard_display_name, sound_clips.clip_url, sound_clips._id as sound_clip_id, " +
+                "sound_clips.name as sound_clip_name " +
+                "FROM " +
+                "guild_opts LEFT JOIN soundboards ON (guild_opts._id = soundboards.guild_opts_id OR " +
+                "soundboards._id = ANY (added_soundboards)) " +
+                "LEFT JOIN sound_clips ON (sound_clips.soundboard_id = soundboards._id) " +
+                "WHERE " +
+                "guild_opts.guild_id = '" + GLOBAL +"';";
     }
 
     public String createNewGuildOptions(String guildId) {

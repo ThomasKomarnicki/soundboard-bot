@@ -93,4 +93,11 @@ public class GuildOptions {
     public Collection<SoundBoard> getAllSoundboards(){
         return soundBoards.values();
     }
+
+    public void addGlobalSoundboard(SoundBoard soundBoard) {
+        String key = SoundBoard.getNameAsKey(soundBoard.getName());
+        if(!soundBoards.containsKey(key)){
+            soundBoards.put(key, soundBoard);
+        }
+    }
 }

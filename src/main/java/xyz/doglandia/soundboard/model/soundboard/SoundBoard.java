@@ -21,6 +21,11 @@ public class SoundBoard {
         clips = new HashMap<>();
     }
 
+    public SoundBoard(int id){
+        this();
+        this.id = id;
+    }
+
     public SoundBoard(GuildOptions guildOptions, int id){
         this();
         this.guildOptions = guildOptions;

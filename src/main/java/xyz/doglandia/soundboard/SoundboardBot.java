@@ -21,7 +21,7 @@ public class SoundboardBot {
     public SoundboardBot(String token){
 
         try {
-            client = new ClientBuilder().withToken(token).login();
+            client = new ClientBuilder().withToken(token).setMaxReconnectAttempts(100).setDaemon(false).login();
 
         } catch (DiscordException e) {
             e.printStackTrace();
