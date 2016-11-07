@@ -1,6 +1,8 @@
 package xyz.doglandia.soundboard.model.guild;
 
+import xyz.doglandia.soundboard.model.soundboard.ClipAlias;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
+import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 
 
 import java.util.*;
@@ -20,6 +22,8 @@ public class GuildOptions {
 
     private HashMap<String, SoundBoard> soundBoards;
 
+    private ClipAliasCollection clipAliasCollection;
+
     public GuildOptions(){
         soundBoards = new HashMap<>();
         rolesThatCanAddClips = new HashSet<>();
@@ -30,6 +34,9 @@ public class GuildOptions {
         this.id = id;
     }
 
+    public void setClipAliases(List<ClipAlias> clipAliases){
+        clipAliasCollection = new GuildClipAliasCollection(clipAliases);
+    }
 
     public String getGuildId() {
         return guildId;
@@ -99,5 +106,16 @@ public class GuildOptions {
         if(!soundBoards.containsKey(key)){
             soundBoards.put(key, soundBoard);
         }
+    }
+
+    public SoundClip findSoundClipById(int clipId) {
+        for(SoundBoard soundBoard : soundBoards.values()){
+            if(soundBoard.hasClip(clipId)){
+                return soundBoard.getSoundClip(clipId);
+            }
+
+        }
+
+        return null;
     }
 }

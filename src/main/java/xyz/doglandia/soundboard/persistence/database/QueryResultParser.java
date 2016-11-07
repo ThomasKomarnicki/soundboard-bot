@@ -1,6 +1,7 @@
 package xyz.doglandia.soundboard.persistence.database;
 
 import xyz.doglandia.soundboard.model.guild.GuildOptions;
+import xyz.doglandia.soundboard.model.soundboard.ClipAlias;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 
@@ -120,5 +121,29 @@ public class QueryResultParser {
         while (resultSet.next());
 
         return soundBoards.values();
+    }
+
+    public List<ClipAlias> createClipAliases(ResultSet resultSet, GuildOptions guildOptions) throws SQLException {
+        if(resultSet == null){
+            return new ArrayList<>();
+        }
+
+        if(resultSet.isBeforeFirst()){
+            resultSet.next();
+        }
+
+        List<ClipAlias> aliases = new ArrayList<>();
+        do{
+            String targetText = resultSet.getString("target_text");
+            int clipId = resultSet.getInt("clip_id");
+
+            SoundClip soundClip = guildOptions.findSoundClipById(clipId);
+
+            ClipAlias alias = new ClipAlias(soundClip, targetText);
+            aliases.add(alias);
+
+        }while(resultSet.next());
+
+        return aliases;
     }
 }

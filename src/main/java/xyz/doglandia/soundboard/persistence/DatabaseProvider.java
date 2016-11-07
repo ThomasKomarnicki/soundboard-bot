@@ -3,6 +3,7 @@ package xyz.doglandia.soundboard.persistence;
 import org.apache.commons.io.FilenameUtils;
 import xyz.doglandia.soundboard.BotEnvironment;
 import xyz.doglandia.soundboard.model.guild.GuildOptions;
+import xyz.doglandia.soundboard.model.soundboard.ClipAlias;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 import xyz.doglandia.soundboard.persistence.database.QueryBuilder;
@@ -88,6 +89,11 @@ public class DatabaseProvider implements DataProvider {
                 for(SoundBoard soundBoard : globalSoundboards){
                     guildOptions.addGlobalSoundboard(soundBoard);
                 }
+
+                query = queryBuilder.getClipAliasesForGuild(guildId);
+                resultSet = st.executeQuery(query);
+                List<ClipAlias> aliases = queryResultParser.createClipAliases(resultSet, guildOptions);
+                guildOptions.setClipAliases(aliases);
 
                 return guildOptions;
             }

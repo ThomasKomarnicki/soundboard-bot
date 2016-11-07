@@ -116,4 +116,8 @@ public class QueryBuilder {
     public String soundClipExists(String guildId, String soundboardName, String clipName) {
         return "SELECT EXISTS (SELECT 1 from "+SOUND_CLIPS_TABLE+" WHERE name = '"+clipName+"');";
     }
+
+    public String getClipAliasesForGuild(String guildId) {
+        return "SELECT FROM + clip_alias WHERE guild_id = "+guildId +";";
+    }
 }
