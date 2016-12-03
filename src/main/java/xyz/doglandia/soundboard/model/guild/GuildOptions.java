@@ -38,6 +38,10 @@ public class GuildOptions {
         clipAliasCollection = new GuildClipAliasCollection(clipAliases);
     }
 
+    public ClipAliasCollection getClipAliasCollection() {
+        return clipAliasCollection;
+    }
+
     public String getGuildId() {
         return guildId;
     }

@@ -8,6 +8,7 @@ import xyz.doglandia.soundboard.exception.InvalidAudioClipException;
 import xyz.doglandia.soundboard.exception.SoundboardAlreadyExistsException;
 import xyz.doglandia.soundboard.exception.SoundboardExistException;
 import xyz.doglandia.soundboard.model.guild.GuildOptions;
+import xyz.doglandia.soundboard.model.soundboard.ClipAlias;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 import xyz.doglandia.soundboard.text.TextDispatcher;
@@ -76,10 +77,23 @@ public class MessageHandlerImpl implements MessageHandler {
             case LIST_SOUNDBOARD:
                 listSoundboards(chatChannel);
                 break;
+            case ADD_ALIAS:
+                break;
         }
+
+        checkForClipAliasMatch(message, chatChannel);
 
         return true;
 
+    }
+
+    private void checkForClipAliasMatch(IMessage message, IChannel channel){
+        GuildOptions guildOptions = dataController.getGuildOptionsById(channel.getGuild().getID());
+        ClipAlias clipAlias = guildOptions.getClipAliasCollection().getMatchingAliasForText(message.getContent()); // returns null if no match
+        if(clipAlias != null){
+            String url = clipAlias.getSoundClip().getUrl();
+            audioDispatcher.playAudioClip(message, url);
+        }
     }
 
 
@@ -330,6 +344,8 @@ public class MessageHandlerImpl implements MessageHandler {
             builder.append("*");
             builder.append('\n');
         }
+        builder.append("\n\nTo see what sound clips are available in each soundboard, enter *!help <soundboard name>*");
+
         textDispatcher.dispatchText(builder.toString(), channel);
     }
 

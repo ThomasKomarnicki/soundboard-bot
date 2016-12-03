@@ -90,10 +90,10 @@ public class DatabaseProvider implements DataProvider {
                     guildOptions.addGlobalSoundboard(soundBoard);
                 }
 
-                query = queryBuilder.getClipAliasesForGuild(guildId);
-                resultSet = st.executeQuery(query);
-                List<ClipAlias> aliases = queryResultParser.createClipAliases(resultSet, guildOptions);
-                guildOptions.setClipAliases(aliases);
+//                query = queryBuilder.getClipAliasesForGuild(guildId);
+//                resultSet = st.executeQuery(query);
+//                List<ClipAlias> aliases = queryResultParser.createClipAliases(resultSet, guildOptions);
+//                guildOptions.setClipAliases(aliases);
 
                 return guildOptions;
             }

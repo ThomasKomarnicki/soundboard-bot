@@ -24,7 +24,9 @@ public class MessageSessionController {
     }
 
     public void endSession(String userId){
-
+        if(sessions.containsKey(userId)){
+            sessions.remove(userId);
+        }
     }
 
     public void startMessageSession(IMessage message, MessageSession.MessageResponder messageResponder){

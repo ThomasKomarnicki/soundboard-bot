@@ -13,7 +13,7 @@ import java.util.Map;
 public class MessageParams {
 
     public enum Type{
-        NONE, ADD_SOUNDBOARD, ADD_CLIP, PLAY_CLIP, HELP, STOP_AUDIO, JOIN_CHANNEL, LIST_SOUNDBOARD;
+        NONE, ADD_SOUNDBOARD, ADD_CLIP, PLAY_CLIP, HELP, STOP_AUDIO, JOIN_CHANNEL, LIST_SOUNDBOARD, ADD_ALIAS;
     }
 
     public static class Keys{
