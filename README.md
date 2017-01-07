@@ -2,7 +2,7 @@
 
 This Discord bot lets you create fun soundboards for your server's voice channels. 
 
-To add the bot to your sever click [this link](https://discordapp.com/oauth2/authorize?client_id=203881621076574208&scope=bot&permissions=0)
+To add the bot to your sever click [this link](https://discordapp.com/oauth2/authorize?&client_id=203881621076574208&scope=bot&permissions=3189760)
 
 ## Usage
 
