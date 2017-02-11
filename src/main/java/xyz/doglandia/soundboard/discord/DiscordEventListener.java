@@ -1,12 +1,15 @@
 package xyz.doglandia.soundboard.discord;
 
 import sx.blah.discord.api.IDiscordClient;
+import sx.blah.discord.handle.impl.events.ReadyEvent;
+import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MentionEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.member.UserRoleUpdateEvent;
+import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelEvent;
 import sx.blah.discord.handle.obj.IRole;
-import sx.blah.discord.util.DiscordException;
 import xyz.doglandia.soundboard.message.MessageHandler;
 import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.*;
-import sx.blah.discord.util.MissingPermissionsException;
 
 import java.util.List;
 
@@ -33,13 +36,15 @@ public class DiscordEventListener {
     @EventSubscriber
     public void onGuildCreated(GuildCreateEvent event){
 
-
         messageHandler.handleGuildCreated(event.getGuild());
     }
+
+
 
     @EventSubscriber
     public void onMessageReceived(MessageReceivedEvent event){
         String messageContent = event.getMessage().getContent();
+
 
         messageHandler.handleMessage(event.getMessage(), event.getMessage().getChannel());
 
@@ -62,15 +67,15 @@ public class DiscordEventListener {
     }
 
     @EventSubscriber
-    public void onVoiceChannelConnected(UserVoiceChannelJoinEvent event){
+    public void onVoiceChannelConnected(UserVoiceChannelEvent event){
         if(event.getUser().getID().equals(client.getOurUser().getID())){
-            messageHandler.handleVoiceChannelJoined(event.getChannel());
+            messageHandler.handleVoiceChannelJoined(event.getVoiceChannel());
         }
 
     }
 
     @EventSubscriber
-    public void onVoiceChannelChanged(UserVoiceChannelMoveEvent event){
+    public void onVoiceChannelChanged(sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelMoveEvent event){
 
         if(event.getUser().getID().equals(client.getOurUser().getID())){
             messageHandler.handleVoiceChannelJoined(event.getNewChannel());

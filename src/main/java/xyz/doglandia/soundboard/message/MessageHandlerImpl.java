@@ -81,7 +81,7 @@ public class MessageHandlerImpl implements MessageHandler {
                 break;
         }
 
-        checkForClipAliasMatch(message, chatChannel);
+//        checkForClipAliasMatch(message, chatChannel);
 
         return true;
 
@@ -108,23 +108,36 @@ public class MessageHandlerImpl implements MessageHandler {
 
         GuildOptions guildOptions = dataController.getGuildOptionsById(guild.getID());
         String lastConnectedId = guildOptions.getLastConnectedChannelId();
-        IVoiceChannel voiceChannel = null;
-        if(lastConnectedId != null){
-            // find voice channel
-            voiceChannel = guild.getVoiceChannelByID(lastConnectedId);
-        }
-        if(voiceChannel == null) {
-            if (guild.getVoiceChannels().size() > 0) {
-                voiceChannel = guild.getVoiceChannels().get(0);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(10000); // wait for it to be ready aka todo
+                    IVoiceChannel voiceChannel = null;
+                    if(lastConnectedId != null){
+                        // find voice channel
+                        voiceChannel = guild.getVoiceChannelByID(lastConnectedId);
+                    }
+                    if(voiceChannel == null) {
+                        if (guild.getVoiceChannels().size() > 0) {
+                            voiceChannel = guild.getVoiceChannels().get(0);
+                        }
+                    }
+                    if(voiceChannel != null){
+                        try {
+                            voiceChannel.join();
+                        } catch (MissingPermissionsException e) {
+
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-        }
-        if(voiceChannel != null){
-            try {
-                voiceChannel.join();
-            } catch (MissingPermissionsException e) {
-                e.printStackTrace();
-            }
-        }
+        }).start();
+
 
         if(newlyCreated) {
             IChannel defaultTextChannel = findDefaultChatChannel(guild);
@@ -288,7 +301,7 @@ public class MessageHandlerImpl implements MessageHandler {
         if(guild == null){
             textDispatcher.dispatchText("could not join channel", message.getChannel());
         }
-        for(IVoiceChannel voiceChannel :guild.getVoiceChannels()){
+        for(IVoiceChannel voiceChannel : guild.getVoiceChannels()){
             for(IUser user :voiceChannel.getConnectedUsers()){
                 if(user.getID().equals(message.getAuthor().getID())){
                     try {
@@ -296,6 +309,7 @@ public class MessageHandlerImpl implements MessageHandler {
                         voiceChannel.join();
                         return;
                     } catch (MissingPermissionsException e) {
+
                         e.printStackTrace();
                     }
                 }

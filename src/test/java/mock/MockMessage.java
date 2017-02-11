@@ -1,8 +1,11 @@
 package mock;
 
 import sx.blah.discord.api.IDiscordClient;
+import sx.blah.discord.api.IShard;
+import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.DiscordException;
+import sx.blah.discord.util.MessageTokenizer;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
@@ -68,6 +71,11 @@ public class MockMessage implements IMessage{
     }
 
     @Override
+    public List<IChannel> getChannelMentions() {
+        return null;
+    }
+
+    @Override
     public List<Attachment> getAttachments() {
         if(attachment != null) {
             List<Attachment> attachments = new ArrayList<>();
@@ -79,7 +87,17 @@ public class MockMessage implements IMessage{
     }
 
     @Override
+    public List<IEmbed> getEmbedded() {
+        return null;
+    }
+
+    @Override
     public void reply(String s) throws MissingPermissionsException, RateLimitException, DiscordException {
+
+    }
+
+    @Override
+    public void reply(String s, EmbedObject embedObject) throws MissingPermissionsException, RateLimitException, DiscordException {
 
     }
 
@@ -89,7 +107,17 @@ public class MockMessage implements IMessage{
     }
 
     @Override
+    public IMessage edit(String s, EmbedObject embedObject) throws MissingPermissionsException, RateLimitException, DiscordException {
+        return null;
+    }
+
+    @Override
     public boolean mentionsEveryone() {
+        return false;
+    }
+
+    @Override
+    public boolean mentionsHere() {
         return false;
     }
 
@@ -114,12 +142,82 @@ public class MockMessage implements IMessage{
     }
 
     @Override
+    public String getFormattedContent() {
+        return null;
+    }
+
+    @Override
+    public List<IReaction> getReactions() {
+        return null;
+    }
+
+    @Override
+    public IReaction getReactionByIEmoji(IEmoji iEmoji) {
+        return null;
+    }
+
+    @Override
+    public IReaction getReactionByName(String s) {
+        return null;
+    }
+
+    @Override
+    public void removeAllReactions() throws RateLimitException, MissingPermissionsException, DiscordException {
+
+    }
+
+    @Override
+    public void addReaction(IReaction iReaction) throws MissingPermissionsException, RateLimitException, DiscordException {
+
+    }
+
+    @Override
+    public void addReaction(IEmoji iEmoji) throws MissingPermissionsException, RateLimitException, DiscordException {
+
+    }
+
+    @Override
+    public void addReaction(String s) throws MissingPermissionsException, RateLimitException, DiscordException {
+
+    }
+
+    @Override
+    public void removeReaction(IUser iUser, IReaction iReaction) throws MissingPermissionsException, RateLimitException, DiscordException {
+
+    }
+
+    @Override
+    public void removeReaction(IReaction iReaction) throws MissingPermissionsException, RateLimitException, DiscordException {
+
+    }
+
+    @Override
+    public MessageTokenizer tokenize() {
+        return null;
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return false;
+    }
+
+    @Override
+    public String getWebhookID() {
+        return null;
+    }
+
+    @Override
     public String getID() {
         return null;
     }
 
     @Override
     public IDiscordClient getClient() {
+        return null;
+    }
+
+    @Override
+    public IShard getShard() {
         return null;
     }
 

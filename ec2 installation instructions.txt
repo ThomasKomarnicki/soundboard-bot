@@ -40,4 +40,4 @@ listen_addresses = '*'          # what IP address(es) to listen on;
 // start postgres and app services
 sudo service postgresql start
 sudo service bot-service start
-
+sudo service postgresql start

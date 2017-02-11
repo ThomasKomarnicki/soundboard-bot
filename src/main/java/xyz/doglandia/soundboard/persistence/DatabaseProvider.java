@@ -87,6 +87,7 @@ public class DatabaseProvider implements DataProvider {
                 resultSet = st.executeQuery(query);
                 Collection<SoundBoard> globalSoundboards = queryResultParser.createSoundBoardList(resultSet);
                 for(SoundBoard soundBoard : globalSoundboards){
+                    soundBoard.setGuildOptions(guildOptions);
                     guildOptions.addGlobalSoundboard(soundBoard);
                 }
 

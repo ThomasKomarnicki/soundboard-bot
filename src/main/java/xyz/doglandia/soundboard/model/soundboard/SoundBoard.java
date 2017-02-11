@@ -81,6 +81,10 @@ public class SoundBoard {
         return guildOptions;
     }
 
+    public void setGuildOptions(GuildOptions guildOptions) {
+        this.guildOptions = guildOptions;
+    }
+
     public static String getNameAsKey(String name){
         return name.toLowerCase();
     }
