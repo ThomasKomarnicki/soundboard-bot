@@ -56,7 +56,12 @@ public class SoundboardDataController implements DataController {
     public boolean soundBoardExists(String guildId, String soundboardName) {
         GuildOptions guildOptions = getGuildOptions(guildId);
         return guildOptions.hasSoundboard(soundboardName);
+    }
 
+    @Override
+    public boolean localSoundBoardExists(String guildId, String soundboardName) {
+        GuildOptions guildOptions = getGuildOptions(guildId);
+        return guildOptions.hasSoundboard(soundboardName) && !guildOptions.getSoundboard(soundboardName).isGlobal();
     }
 
     @Override
@@ -70,11 +75,23 @@ public class SoundboardDataController implements DataController {
         return null;
     }
 
+    private SoundBoard getLocalSoundboard(String guildId, String soundboardName){
+        if(localSoundBoardExists(guildId, soundboardName)){
+            GuildOptions guildOptions = getGuildOptions(guildId);
+            return guildOptions.getSoundboard(soundboardName);
+        }
+
+        return null;
+    }
+
+
+
     @Override
     public void saveSoundFileToSoundboard(String guildId, String url, String soundboardName, String clipName) throws SoundboardExistException, IOException, InvalidAudioClipException {
         // download sound file
 
-        SoundBoard soundBoard = getSoundboard(guildId, soundboardName);
+        SoundBoard soundBoard = getLocalSoundboard(guildId, soundboardName);
+
 
         if(!url.endsWith(".mp3")){
             throw new InvalidAudioClipException();

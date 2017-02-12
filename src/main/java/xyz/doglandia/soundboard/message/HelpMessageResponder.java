@@ -2,6 +2,7 @@ package xyz.doglandia.soundboard.message;
 
 import sx.blah.discord.handle.obj.IMessage;
 import xyz.doglandia.soundboard.text.TextDispatcher;
+import xyz.doglandia.soundboard.util.Sensitive;
 
 /**
  * Created by tkomarnicki on 8/25/16.
@@ -18,7 +19,8 @@ public class HelpMessageResponder implements MessageSession.MessageResponder {
             "(4) List Soundboards or type ***!soundboards***";
     public static final String GET_STARTED = "Hi, welcome to your brand new Soundboard Bot.\nThis bot allows you to create soundboards for your Discord server.\n" +
             "Soundboards are created right in the discord client. Sounds are played back through the Soundboard Bot when it is connected to a voice channel.\n" +
-            "\ntldr: type ***!help*** to get started";
+            "For help and support join this discord server: "+ Sensitive.INVITE_LINK+"\n" +
+            "\ntldr: type ***!help*** to get started\n";
 
     TextDispatcher textDispatcher;
     MessageHandlerImpl messageHandler;

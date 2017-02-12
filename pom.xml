@@ -54,7 +54,7 @@
         <dependency>
             <groupId>com.github.austinv11</groupId>
             <artifactId>Discord4j</artifactId>
-            <version>b6cba39</version>
+            <version>81e604d</version>
         </dependency>
 
         <dependency>
@@ -87,6 +87,12 @@
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>1.11.22</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.brsanthu</groupId>
+            <artifactId>google-analytics-java</artifactId>
+            <version>1.1.2</version>
         </dependency>
 
 

@@ -1,13 +1,13 @@
 package mock;
 
 import sx.blah.discord.api.IDiscordClient;
+import sx.blah.discord.api.IShard;
+import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.obj.*;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MessageList;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
+import sx.blah.discord.util.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.EnumSet;
@@ -66,34 +66,72 @@ public class MockChannel implements IChannel {
     }
 
     @Override
+    public IMessage sendMessage(EmbedObject embedObject) throws DiscordException, RateLimitException, MissingPermissionsException {
+        return null;
+    }
+
+    @Override
     public IMessage sendMessage(String s, boolean b) throws MissingPermissionsException, RateLimitException, DiscordException {
         return null;
     }
 
     @Override
-    public IMessage sendFile(File file, String s) throws IOException, MissingPermissionsException, RateLimitException, DiscordException {
+    public IMessage sendMessage(String s, EmbedObject embedObject) throws DiscordException, RateLimitException, MissingPermissionsException {
         return null;
     }
 
     @Override
-    public IMessage sendFile(File file) throws IOException, MissingPermissionsException, RateLimitException, DiscordException {
+    public IMessage sendMessage(String s, EmbedObject embedObject, boolean b) throws RateLimitException, DiscordException, MissingPermissionsException {
+        return null;
+    }
+
+
+    @Override
+    public IMessage sendFile(File file) throws MissingPermissionsException, RateLimitException, DiscordException {
         return null;
     }
 
     @Override
-    public IMessage sendFile(InputStream inputStream, String s, String s1) throws IOException, MissingPermissionsException, RateLimitException, DiscordException {
+    public IMessage sendFile(String s, File file) throws FileNotFoundException, DiscordException, RateLimitException, MissingPermissionsException {
         return null;
     }
 
     @Override
-    public IMessage sendFile(InputStream inputStream, String s) throws IOException, MissingPermissionsException, RateLimitException, DiscordException {
+    public IMessage sendFile(EmbedObject embedObject, File file) throws FileNotFoundException, DiscordException, RateLimitException, MissingPermissionsException {
         return null;
     }
 
     @Override
-    public IInvite createInvite(int i, int i1, boolean b) throws MissingPermissionsException, RateLimitException, DiscordException {
+    public IMessage sendFile(String s, InputStream inputStream, String s1) throws DiscordException, RateLimitException, MissingPermissionsException {
         return null;
     }
+
+    @Override
+    public IMessage sendFile(EmbedObject embedObject, InputStream inputStream, String s) throws DiscordException, RateLimitException, MissingPermissionsException {
+        return null;
+    }
+
+    @Override
+    public IMessage sendFile(String s, boolean b, InputStream inputStream, String s1) throws DiscordException, RateLimitException, MissingPermissionsException {
+        return null;
+    }
+
+    @Override
+    public IMessage sendFile(String s, boolean b, InputStream inputStream, String s1, EmbedObject embedObject) throws DiscordException, RateLimitException, MissingPermissionsException {
+        return null;
+    }
+
+    @Override
+    public IMessage sendFile(MessageBuilder messageBuilder, InputStream inputStream, String s) throws DiscordException, RateLimitException, MissingPermissionsException {
+        return null;
+    }
+
+    @Override
+    public IInvite createInvite(int i, int i1, boolean b, boolean b1) throws MissingPermissionsException, RateLimitException, DiscordException {
+        return null;
+    }
+
+
 
     @Override
     public void toggleTypingStatus() {
@@ -101,8 +139,18 @@ public class MockChannel implements IChannel {
     }
 
     @Override
+    public void setTypingStatus(boolean b) {
+
+    }
+
+    @Override
     public boolean getTypingStatus() {
         return false;
+    }
+
+    @Override
+    public void edit(String s, int i, String s1) throws DiscordException, RateLimitException, MissingPermissionsException {
+
     }
 
     @Override
@@ -196,12 +244,52 @@ public class MockChannel implements IChannel {
     }
 
     @Override
+    public List<IWebhook> getWebhooks() {
+        return null;
+    }
+
+    @Override
+    public IWebhook getWebhookByID(String s) {
+        return null;
+    }
+
+    @Override
+    public List<IWebhook> getWebhooksByName(String s) {
+        return null;
+    }
+
+    @Override
+    public IWebhook createWebhook(String s) throws MissingPermissionsException, DiscordException, RateLimitException {
+        return null;
+    }
+
+    @Override
+    public IWebhook createWebhook(String s, Image image) throws MissingPermissionsException, DiscordException, RateLimitException {
+        return null;
+    }
+
+    @Override
+    public IWebhook createWebhook(String s, String s1) throws MissingPermissionsException, DiscordException, RateLimitException {
+        return null;
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return false;
+    }
+
+    @Override
     public String getID() {
         return null;
     }
 
     @Override
     public IDiscordClient getClient() {
+        return null;
+    }
+
+    @Override
+    public IShard getShard() {
         return null;
     }
 

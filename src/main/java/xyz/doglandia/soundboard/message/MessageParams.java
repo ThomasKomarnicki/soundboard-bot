@@ -13,7 +13,7 @@ import java.util.Map;
 public class MessageParams {
 
     public enum Type{
-        NONE, ADD_SOUNDBOARD, ADD_CLIP, PLAY_CLIP, HELP, STOP_AUDIO, JOIN_CHANNEL, LIST_SOUNDBOARD;
+        NONE, ADD_SOUNDBOARD, ADD_CLIP, PLAY_CLIP, HELP, STOP_AUDIO, JOIN_CHANNEL, LIST_SOUNDBOARD, ADD_ALIAS;
     }
 
     public static class Keys{
@@ -91,7 +91,7 @@ public class MessageParams {
             else if(messageParams[0].equalsIgnoreCase("!join")){
                 type = Type.JOIN_CHANNEL;
                 return;
-            }else{
+            }else if(messageParams[0].startsWith("!")){
                 type = Type.HELP;
                 params.put(Keys.TYPE, "help");
                 params.put(Keys.HELP_PARAM, messageParams[0].substring(1, messageParams[0].length()));

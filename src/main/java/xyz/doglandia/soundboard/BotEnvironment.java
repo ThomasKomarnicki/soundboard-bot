@@ -8,7 +8,7 @@ import xyz.doglandia.soundboard.util.Sensitive;
 public class BotEnvironment {
 
     private static final String STAGING_DATABASE_CONNECTION = "jdbc:postgresql://ec2-52-42-10-94.us-west-2.compute.amazonaws.com:5432/";
-    private static final String PROD_DATABASE_CONNECTION = "jdbc:postgresql://ec2-52-41-77-215.us-west-2.compute.amazonaws.com:5432/";
+    private static final String PROD_DATABASE_CONNECTION = "jdbc:postgresql://ec2-35-166-125-239.us-west-2.compute.amazonaws.com:5432/";
     private static final String DEV_DATABASE_CONNECTION = STAGING_DATABASE_CONNECTION;
 
     private static final String STAGING_S3_FOLDER = "staging";
@@ -68,6 +68,7 @@ public class BotEnvironment {
     public String getS3BucketDivision() {
         if(env == Env.Production){
             return PROD_S3_FOLDER;
+//            return DEV_S3_FOLDER;
         }else if(env == Env.Staging){
             return STAGING_S3_FOLDER;
         }else{
@@ -88,6 +89,7 @@ public class BotEnvironment {
     public String getTempFilesDir(){
         if(env == Env.Production){
             return PROD_TEMP_FILES_DIR;
+//            return DEV_TEMP_FILES_DIR;
         }else if(env == Env.Staging){
             return STAGING_TEMP_FILES_DIR;
         }else{

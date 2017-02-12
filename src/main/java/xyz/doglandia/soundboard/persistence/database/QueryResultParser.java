@@ -1,12 +1,13 @@
 package xyz.doglandia.soundboard.persistence.database;
 
 import xyz.doglandia.soundboard.model.guild.GuildOptions;
+import xyz.doglandia.soundboard.model.soundboard.ClipAlias;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Created by tdk10 on 8/15/2016.
@@ -86,5 +87,63 @@ public class QueryResultParser {
         soundBoard.setDisplayName(resultSet.getString("display_name"));
 
         return soundBoard;
+    }
+
+    public Collection createSoundBoardList(ResultSet resultSet) throws SQLException {
+        if(resultSet == null){
+            return new ArrayList<>();
+        }
+        HashMap soundBoards = new HashMap();
+
+        if(resultSet.isBeforeFirst()){
+            resultSet.next();
+        }
+
+        do{
+
+
+            String soundboardName = resultSet.getString("soundboard_name");
+
+
+            if(soundboardName != null && !soundBoards.containsKey(soundboardName)) {
+                SoundBoard soundBoard = new SoundBoard(resultSet.getInt("soundboard_id"));
+                soundBoard.setName(soundboardName);
+                soundBoard.setDisplayName(resultSet.getString("soundboard_display_name"));
+                soundBoards.put(soundboardName, soundBoard);
+            }
+
+            if(resultSet.getString("sound_clip_name") != null) {
+                SoundClip soundClip = new SoundClip(resultSet.getInt("sound_clip_id"), resultSet.getString("sound_clip_name"), resultSet.getString("clip_url"));
+                ((SoundBoard)soundBoards.get(soundboardName)).addClip(soundClip);
+            }
+
+        }
+        while (resultSet.next());
+
+        return soundBoards.values();
+    }
+
+    public List<ClipAlias> createClipAliases(ResultSet resultSet, GuildOptions guildOptions) throws SQLException {
+        if(resultSet == null){
+            return new ArrayList<>();
+        }
+
+        if(resultSet.isBeforeFirst()){
+            resultSet.next();
+        }
+
+        List<ClipAlias> aliases = new ArrayList<>();
+        do{
+            String targetText = resultSet.getString("target_text");
+            int clipId = resultSet.getInt("clip_id");
+
+            SoundClip soundClip = guildOptions.findSoundClipById(clipId);
+
+            ClipAlias alias = new ClipAlias(soundClip, targetText);
+            aliases.add(alias);
+
+        }while(resultSet.next());
+
+        return aliases;
     }
 }

@@ -12,13 +12,24 @@ public class SoundBoard {
 
     private int id;
 
+    private boolean isGlobal = false;
+
     private String name;
     private String displayName;
 
     private GuildOptions guildOptions;
 
+    private Map<String, SoundClip> clips;
+    private Map<Integer, SoundClip> clipIdsMap;
+
     public SoundBoard(){
         clips = new HashMap<>();
+        clipIdsMap = new HashMap<>();
+    }
+
+    public SoundBoard(int id){
+        this();
+        this.id = id;
     }
 
     public SoundBoard(GuildOptions guildOptions, int id){
@@ -27,14 +38,20 @@ public class SoundBoard {
         this.id = id;
     }
 
-    private Map<String, SoundClip> clips;
-
     public boolean hasClip(String clipName){
         return clips.containsKey(clipName);
     }
 
+    public boolean hasClip(int clipId){
+        return clipIdsMap.containsKey(clipId);
+    }
+
     public SoundClip getSoundClip(String clipName){
         return clips.get(clipName);
+    }
+
+    public SoundClip getSoundClip(int clipId) {
+        return clipIdsMap.get(clipId);
     }
 
     public void setName(String name) {
@@ -43,6 +60,7 @@ public class SoundBoard {
 
     public void addClip(SoundClip soundClip){
         clips.put(soundClip.getName(), soundClip);
+        clipIdsMap.put(soundClip.getId(), soundClip);
     }
 
     public String getName() {
@@ -65,6 +83,10 @@ public class SoundBoard {
         return guildOptions;
     }
 
+    public void setGuildOptions(GuildOptions guildOptions) {
+        this.guildOptions = guildOptions;
+    }
+
     public static String getNameAsKey(String name){
         return name.toLowerCase();
     }
@@ -79,5 +101,13 @@ public class SoundBoard {
 
     public int getClipCount() {
         return clips.size();
+    }
+
+    public boolean isGlobal() {
+        return isGlobal;
+    }
+
+    public void setIsGlobal(boolean global) {
+        isGlobal = global;
     }
 }

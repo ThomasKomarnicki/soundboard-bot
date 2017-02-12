@@ -1,6 +1,7 @@
 package mock;
 
 import sx.blah.discord.api.IDiscordClient;
+import sx.blah.discord.api.IShard;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.Permissions;
@@ -62,6 +63,11 @@ public class MockRole implements IRole {
     }
 
     @Override
+    public void edit(Color color, boolean b, String s, EnumSet<Permissions> enumSet, boolean b1) throws DiscordException, RateLimitException, MissingPermissionsException {
+
+    }
+
+    @Override
     public void changeColor(Color color) throws RateLimitException, DiscordException, MissingPermissionsException {
 
     }
@@ -92,6 +98,16 @@ public class MockRole implements IRole {
     }
 
     @Override
+    public boolean isEveryoneRole() {
+        return false;
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return false;
+    }
+
+    @Override
     public String mention() {
         return null;
     }
@@ -103,6 +119,11 @@ public class MockRole implements IRole {
 
     @Override
     public IDiscordClient getClient() {
+        return null;
+    }
+
+    @Override
+    public IShard getShard() {
         return null;
     }
 

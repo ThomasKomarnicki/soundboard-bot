@@ -3,6 +3,7 @@ package xyz.doglandia.soundboard.persistence;
 import org.apache.commons.io.FilenameUtils;
 import xyz.doglandia.soundboard.BotEnvironment;
 import xyz.doglandia.soundboard.model.guild.GuildOptions;
+import xyz.doglandia.soundboard.model.soundboard.ClipAlias;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 import xyz.doglandia.soundboard.persistence.database.QueryBuilder;
@@ -11,6 +12,8 @@ import xyz.doglandia.soundboard.persistence.database.QueryResultParser;
 import java.io.File;
 import java.sql.*;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -72,12 +75,28 @@ public class DatabaseProvider implements DataProvider {
     public GuildOptions getGuildOptionsByGuildId(String guildId) {
 
         try {
-            Statement st = connection.createStatement();
-            String query = queryBuilder.getGuildOptions(guildId);
-            ResultSet resultSet = st.executeQuery(query);
+            PreparedStatement st =  queryBuilder.getGuildOptions(connection, guildId);
+            ResultSet resultSet = st.executeQuery();
 
             if(resultSet.next()){
-                return queryResultParser.createGuildOptionsFromJoinedResults(resultSet);
+
+                GuildOptions guildOptions = queryResultParser.createGuildOptionsFromJoinedResults(resultSet);
+
+                st = queryBuilder.getGlobalSoundboards(connection);
+                resultSet = st.executeQuery();
+                Collection<SoundBoard> globalSoundboards = queryResultParser.createSoundBoardList(resultSet);
+                for(SoundBoard soundBoard : globalSoundboards){
+                    soundBoard.setGuildOptions(guildOptions);
+                    soundBoard.setIsGlobal(true);
+                    guildOptions.addGlobalSoundboard(soundBoard);
+                }
+
+//                query = queryBuilder.getClipAliasesForGuild(guildId);
+//                resultSet = st.executeQuery(query);
+//                List<ClipAlias> aliases = queryResultParser.createClipAliases(resultSet, guildOptions);
+//                guildOptions.setClipAliases(aliases);
+
+                return guildOptions;
             }
 
         } catch (SQLException e) {
@@ -91,9 +110,8 @@ public class DatabaseProvider implements DataProvider {
     public void createGuildOptions(String guildId) {
 
         try {
-            Statement st = connection.createStatement();
-            String query = queryBuilder.createNewGuildOptions(guildId);
-            st.execute(query);
+            PreparedStatement st = queryBuilder.createNewGuildOptions(connection, guildId);
+            st.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -115,11 +133,10 @@ public class DatabaseProvider implements DataProvider {
     @Override
     public SoundBoard createSoundboard(GuildOptions guildOptions, String soundboardName) {
         try {
-            Statement st = connection.createStatement();
-            st.execute(queryBuilder.addSoundboard(guildOptions, soundboardName.toLowerCase(), soundboardName));
+            PreparedStatement st = queryBuilder.addSoundboard(connection, guildOptions, soundboardName.toLowerCase(), soundboardName);
 
-            st = connection.createStatement();
-            ResultSet resultSet = st.executeQuery(queryBuilder.getSoundboard(guildOptions, soundboardName.toLowerCase()));
+
+            ResultSet resultSet = st.executeQuery();
             SoundBoard soundBoard = queryResultParser.createSoundBoard(guildOptions, resultSet);
             return soundBoard;
 
@@ -135,13 +152,14 @@ public class DatabaseProvider implements DataProvider {
         String url = filesManager.uploadFile(createFileKey(soundBoard, name, file), file);
 
         try {
-            Statement st = connection.createStatement();
-            st.execute(queryBuilder.addSoundClip(soundBoard, name, url));
+            PreparedStatement st = queryBuilder.addSoundClip(connection, soundBoard, name, url);
+            st.execute();
 
             // query recently added sound clip and add to soundboard
 //            if(result){
-                st = connection.createStatement();
-                ResultSet soundClipResults = st.executeQuery(queryBuilder.getSoundClip(soundBoard, name));
+                st = queryBuilder.getSoundClip(connection, soundBoard, name);
+
+                ResultSet soundClipResults = st.executeQuery();
                 SoundClip soundClip = queryResultParser.createSoundClip(soundClipResults);
                 return soundClip;
 //            }
@@ -155,8 +173,8 @@ public class DatabaseProvider implements DataProvider {
     @Override
     public void deleteSoundboard(SoundBoard soundBoard) {
         try {
-            Statement st = connection.createStatement();
-            st.execute(queryBuilder.deleteSoundboard(soundBoard));
+            PreparedStatement st = queryBuilder.deleteSoundboard(connection, soundBoard);
+            st.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -166,8 +184,8 @@ public class DatabaseProvider implements DataProvider {
     public void deleteClip(SoundClip soundClip) {
         // todo delete file on s3
         try {
-            Statement st = connection.createStatement();
-            st.execute(queryBuilder.deleteSoundClip(soundClip));
+            PreparedStatement st = queryBuilder.deleteSoundClip(connection, soundClip);
+            st.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -185,8 +203,8 @@ public class DatabaseProvider implements DataProvider {
     public void deleteSoundboardByName(String soundboardName){
 
         try {
-            Statement st = connection.createStatement();
-            st.execute(queryBuilder.deleteSoundboardByName(soundboardName));
+            PreparedStatement st = queryBuilder.deleteSoundboardByName(connection, soundboardName);
+            st.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -194,8 +212,8 @@ public class DatabaseProvider implements DataProvider {
 
     public void deleteSoundClipByName(String clipName){
         try {
-            Statement st = connection.createStatement();
-            st.execute(queryBuilder.deleteClipByName(clipName));
+            PreparedStatement st = queryBuilder.deleteClipByName(connection, clipName);
+            st.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -203,8 +221,8 @@ public class DatabaseProvider implements DataProvider {
 
     public boolean soundboardExists(String guildId, String soundboardName){
         try {
-            Statement st = connection.createStatement();
-            return st.execute(queryBuilder.soundboardExists(guildId, soundboardName));
+            PreparedStatement st = queryBuilder.soundboardExists(connection, guildId, soundboardName);
+            return st.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -214,8 +232,8 @@ public class DatabaseProvider implements DataProvider {
 
     public boolean soundClipExists(String guildId, String soundboardName, String clipName){
         try {
-            Statement st = connection.createStatement();
-            return st.execute(queryBuilder.soundClipExists(guildId, soundboardName, clipName));
+            PreparedStatement st = queryBuilder.soundClipExists(connection, guildId, soundboardName, clipName);
+            return st.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }

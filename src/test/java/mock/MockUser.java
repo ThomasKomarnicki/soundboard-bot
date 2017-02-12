@@ -1,11 +1,13 @@
 package mock;
 
 import sx.blah.discord.api.IDiscordClient;
+import sx.blah.discord.api.IShard;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,11 +27,6 @@ public class MockUser implements IUser {
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public Optional<String> getGame() {
-        return null;
     }
 
     @Override
@@ -78,6 +75,11 @@ public class MockUser implements IUser {
     }
 
     @Override
+    public EnumSet<Permissions> getPermissionsForGuild(IGuild iGuild) {
+        return null;
+    }
+
+    @Override
     public Optional<String> getNicknameForGuild(IGuild iGuild) {
         return null;
     }
@@ -90,11 +92,6 @@ public class MockUser implements IUser {
     @Override
     public void moveToVoiceChannel(IVoiceChannel iVoiceChannel) throws DiscordException, RateLimitException, MissingPermissionsException {
 
-    }
-
-    @Override
-    public Optional<IVoiceChannel> getVoiceChannel() {
-        return null;
     }
 
     @Override
@@ -128,12 +125,27 @@ public class MockUser implements IUser {
     }
 
     @Override
+    public void addRole(IRole iRole) throws MissingPermissionsException, RateLimitException, DiscordException {
+
+    }
+
+    @Override
+    public void removeRole(IRole iRole) throws MissingPermissionsException, RateLimitException, DiscordException {
+
+    }
+
+    @Override
     public String getID() {
         return id;
     }
 
     @Override
     public IDiscordClient getClient() {
+        return null;
+    }
+
+    @Override
+    public IShard getShard() {
         return null;
     }
 
