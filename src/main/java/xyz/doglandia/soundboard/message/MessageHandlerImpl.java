@@ -1,17 +1,23 @@
 package xyz.doglandia.soundboard.message;
 
+import com.brsanthu.googleanalytics.EventHit;
 import sx.blah.discord.handle.obj.*;
+import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
+import sx.blah.discord.util.RateLimitException;
+import xyz.doglandia.soundboard.analytics.Analytics;
 import xyz.doglandia.soundboard.audio.AudioDispatcher;
 import xyz.doglandia.soundboard.data.DataController;
 import xyz.doglandia.soundboard.exception.InvalidAudioClipException;
 import xyz.doglandia.soundboard.exception.SoundboardAlreadyExistsException;
+import xyz.doglandia.soundboard.exception.SoundboardExceptionHandler;
 import xyz.doglandia.soundboard.exception.SoundboardExistException;
 import xyz.doglandia.soundboard.model.guild.GuildOptions;
 import xyz.doglandia.soundboard.model.soundboard.ClipAlias;
 import xyz.doglandia.soundboard.model.soundboard.SoundBoard;
 import xyz.doglandia.soundboard.model.soundboard.SoundClip;
 import xyz.doglandia.soundboard.text.TextDispatcher;
+import xyz.doglandia.soundboard.util.Sensitive;
 import xyz.doglandia.soundboard.util.Util;
 
 import java.io.IOException;
@@ -44,7 +50,6 @@ public class MessageHandlerImpl implements MessageHandler {
 
     @Override
     public boolean handleMessage(IMessage message, IChannel chatChannel) {
-
 
         if(messageSessionController.userInMessageSession(message.getAuthor().getID())){
 
@@ -128,11 +133,15 @@ public class MessageHandlerImpl implements MessageHandler {
                         try {
                             voiceChannel.join();
                         } catch (MissingPermissionsException e) {
-
+                            SoundboardExceptionHandler.Instance.handleException(e);
                             e.printStackTrace();
+
+                            notifyServerOwnerAboutMissingPermissions(guild);
+
                         }
                     }
                 } catch (InterruptedException e) {
+                    SoundboardExceptionHandler.Instance.handleException(e);
                     e.printStackTrace();
                 }
             }
@@ -141,6 +150,7 @@ public class MessageHandlerImpl implements MessageHandler {
 
         if(newlyCreated) {
             IChannel defaultTextChannel = findDefaultChatChannel(guild);
+            Analytics.sendEvent(new EventHit("Guild","GuildCreated",guild.getName(),1));
             if (defaultTextChannel != null) {
                 textDispatcher.dispatchText(HelpMessageResponder.GET_STARTED, defaultTextChannel);
             }
@@ -185,6 +195,7 @@ public class MessageHandlerImpl implements MessageHandler {
 
         try {
             dataController.createSoundboard(Util.getGuildFromUserMessage(message).getID(), soundboardName);
+            Analytics.sendEvent(new EventHit("Guild","CreateSoundboard",message.getGuild().getName()+"-"+soundboardName,1));
             // todo do feedback here
             textDispatcher.dispatchText("soundboard \""+soundboardName+"\" created! Type: \n*!help "+soundboardName+"* \nto get started", message.getChannel());
             return true;
@@ -207,6 +218,8 @@ public class MessageHandlerImpl implements MessageHandler {
         try {
             dataController.saveSoundFileToSoundboard(guildId, clipUrl, soundboardName, clipName);
             textDispatcher.dispatchText("Clip added! *!"+soundboardName+" "+clipName+"*", message.getChannel());
+
+            Analytics.sendEvent(new EventHit("Soundboard","ClipPlay",message.getGuild().getName()+"-"+soundboardName+"-"+clipName,1));
             return true;
         } catch (SoundboardExistException e) {
             e.printStackTrace();
@@ -248,6 +261,7 @@ public class MessageHandlerImpl implements MessageHandler {
         if(helpParam == null || helpParam.isEmpty()){
             messageSessionController.startMessageSession(message, new HelpMessageResponder(textDispatcher,this));
             textDispatcher.dispatchText(HelpMessageResponder.HELP_START, message.getChannel());
+            Analytics.sendEvent(new EventHit("Guild","Help","StartHelp",1));
             return true;
         }
 
@@ -280,6 +294,7 @@ public class MessageHandlerImpl implements MessageHandler {
 
                 textDispatcher.dispatchText("*"+soundboardName+"* does not have any clips added yet" +
                         "\nTo upload a sound clip, post a file to the chat room and in the message put *!add clip <name of the clip>*", message.getChannel());
+                Analytics.sendEvent(new EventHit("Guild","Help","SoundboardHelp",1));
             }else {
 
                 StringBuilder helpBuilder = new StringBuilder();
@@ -302,39 +317,28 @@ public class MessageHandlerImpl implements MessageHandler {
             textDispatcher.dispatchText("could not join channel", message.getChannel());
         }
         for(IVoiceChannel voiceChannel : guild.getVoiceChannels()){
-            for(IUser user :voiceChannel.getConnectedUsers()){
+            for(IUser user : voiceChannel.getConnectedUsers()){
                 if(user.getID().equals(message.getAuthor().getID())){
                     try {
 
                         voiceChannel.join();
                         return;
                     } catch (MissingPermissionsException e) {
-
+                        SoundboardExceptionHandler.Instance.handleException(e);
                         e.printStackTrace();
+                        sendMissingVoicePermissionsMessage(message.getChannel());
                     }
                 }
             }
         }
 
         textDispatcher.dispatchText("Could not join your voice channel. Are you connected to a voice channel?",message.getChannel());
-//        List<IVoiceChannel> voiceChannels = guild.getVoiceChannelsByName(channelName);
-//
-//        if(voiceChannels != null && voiceChannels.size() > 0){
-//            IVoiceChannel voiceChannel = voiceChannels.get(0);
-//            if(!voiceChannel.isConnected()) {
-//                try {
-//                    voiceChannel.join();
-//                } catch (MissingPermissionsException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        }
     }
 
 
     private boolean handleAddHelp(IChannel chatChannel) {
         textDispatcher.dispatchText("Click the upload file button, in the comment put *!add <sounbard name> <clip name>*",chatChannel);
+        Analytics.sendEvent(new EventHit("Guild","Help","AddHelp",1));
 
         return true;
     }
@@ -360,29 +364,33 @@ public class MessageHandlerImpl implements MessageHandler {
         }
         builder.append("\n\nTo see what sound clips are available in each soundboard, enter *!help <soundboard name>*");
 
+        Analytics.sendEvent(new EventHit("Guild","Help","ListSoundboards",1));
         textDispatcher.dispatchText(builder.toString(), channel);
     }
 
-    //        if(params.length >= 2){
-//            if(params[0].equalsIgnoreCase("!stats")){
-//                ChannelStatistics channelStatistics = new ChannelStatistics(chatChannel);
-//                if(params[1].equalsIgnoreCase("phrase") && params.length >= 3){
-//                    CountStatistic phraseCountStatistic = channelStatistics.getStatsForPhrase(Util.stringFromArray(params,2,params.length));
-//                    textDispatcher.dispatchText(phraseCountStatistic.getDisplayOutput(), chatChannel);
-//
-//                }else if(params[1].equalsIgnoreCase("count") && params.length >= 3){
-//                    if(params[2].equalsIgnoreCase("messages")) {
-//                        CountStatistic phraseCountStatistic = channelStatistics.getStatsForMessageCount();
-//                        textDispatcher.dispatchText(phraseCountStatistic.getDisplayOutput(), chatChannel);
-//                    }else if(params[2].equalsIgnoreCase("links")){
-//                        MultiCountStatistic phraseCountStatistic = channelStatistics.getStatsForLinks();
-//                        textDispatcher.dispatchText(phraseCountStatistic.getDisplayOutput(), chatChannel);
-//                    }
-//
-//
-//                }
-//            }
-//        }
+    private void sendMissingVoicePermissionsMessage(IChannel channel){
+        textDispatcher.dispatchText("Looks like Soundboardbot is missing permission to join this server's voice channels." +
+                "\nPlease have the server admin add the bot to the server again with this link:\n" +
+                Sensitive.AUTH_URL, channel);
+    }
+
+    private void notifyServerOwnerAboutMissingPermissions(IGuild guild){
+        try {
+            IChannel channel = guild.getOwner().getOrCreatePMChannel();
+            guild.getName();
+
+            textDispatcher.dispatchText("SoundboardBot can't connect to voice channels in Your Server \""+guild.getName()+"\".\n" +
+                    "To fix this, click the link below to update the bot's permissions:\n" +
+                    Sensitive.AUTH_URL, channel);
+
+        } catch (DiscordException e) {
+            SoundboardExceptionHandler.Instance.handleException(e);
+            e.printStackTrace();
+        } catch (RateLimitException e) {
+            SoundboardExceptionHandler.Instance.handleException(e);
+            e.printStackTrace();
+        }
+    }
 
 
 }

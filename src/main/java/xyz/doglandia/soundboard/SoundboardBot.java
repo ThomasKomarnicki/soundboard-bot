@@ -18,14 +18,15 @@ public class SoundboardBot {
     private IDiscordClient client;
 
 
-    public SoundboardBot(String token){
+    public SoundboardBot(String token) throws DiscordException {
 
-        try {
+//        try {
             client = new ClientBuilder().withToken(token).setMaxReconnectAttempts(100).setDaemon(false).login();
 
-        } catch (DiscordException e) {
-            e.printStackTrace();
-        }
+
+//        } catch (DiscordException e) {
+//            e.printStackTrace();
+//        }
 
 //        SoundboardDataCreator soundboardDataCreator = new SoundboardFilesDataCreator(new File("soundboards/"));
         DataController dataController = new SoundboardDataController();

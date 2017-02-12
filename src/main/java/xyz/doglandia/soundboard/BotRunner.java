@@ -1,5 +1,7 @@
 package xyz.doglandia.soundboard;
 
+import sx.blah.discord.util.DiscordException;
+
 /**
  * Created by tdk10 on 7/16/2016.
  */
@@ -14,6 +16,14 @@ public class BotRunner {
 
         BotEnvironment.init(env);
 
-        SoundboardBot bot = new SoundboardBot(BotEnvironment.getInstance().getToken());
+        try {
+            SoundboardBot bot = new SoundboardBot(BotEnvironment.getInstance().getToken());
+        } catch (DiscordException e) {
+            System.out.print("caught discord exception");
+            e.printStackTrace();
+        }
+        catch (Exception e){
+            System.out.print("caught unhandeled exception");
+        }
     }
 }
