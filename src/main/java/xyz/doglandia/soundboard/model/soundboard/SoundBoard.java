@@ -12,6 +12,8 @@ public class SoundBoard {
 
     private int id;
 
+    private boolean isGlobal = false;
+
     private String name;
     private String displayName;
 
@@ -101,5 +103,11 @@ public class SoundBoard {
         return clips.size();
     }
 
+    public boolean isGlobal() {
+        return isGlobal;
+    }
 
+    public void setIsGlobal(boolean global) {
+        isGlobal = global;
+    }
 }
